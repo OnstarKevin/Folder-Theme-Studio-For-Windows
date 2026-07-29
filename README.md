@@ -103,6 +103,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\build\Package-Release.ps1 
 
 本项目基于 [Apache License 2.0](LICENSE) 开源。
 
+### 其他
+本工作室QQ交流群：1042163964
+Buy a Coffee for dev:
+<img width="1152" height="1152" alt="7246dd13a6a69418598dcdce845765bf" src="https://github.com/user-attachments/assets/d62c875c-7d88-4616-b855-d459c2844e3b" />
+
 ---
 
 ## English
