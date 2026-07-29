@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FolderThemeStudio.Core", "src\FolderThemeStudio.Core\FolderThemeStudio.Core.csproj", "{4FF9369E-4D01-48F6-BD4B-AD312C4884BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FolderThemeStudio.App", "src\FolderThemeStudio.App\FolderThemeStudio.App.csproj", "{3074FA43-5F9D-4E83-92A9-2F449E60A590}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FolderThemeStudio.Core.Tests", "tests\FolderThemeStudio.Core.Tests\FolderThemeStudio.Core.Tests.csproj", "{FF94BF33-82F5-466D-A8C9-F2A01225471A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4FF9369E-4D01-48F6-BD4B-AD312C4884BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FF9369E-4D01-48F6-BD4B-AD312C4884BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FF9369E-4D01-48F6-BD4B-AD312C4884BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FF9369E-4D01-48F6-BD4B-AD312C4884BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3074FA43-5F9D-4E83-92A9-2F449E60A590}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3074FA43-5F9D-4E83-92A9-2F449E60A590}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3074FA43-5F9D-4E83-92A9-2F449E60A590}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3074FA43-5F9D-4E83-92A9-2F449E60A590}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF94BF33-82F5-466D-A8C9-F2A01225471A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF94BF33-82F5-466D-A8C9-F2A01225471A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF94BF33-82F5-466D-A8C9-F2A01225471A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF94BF33-82F5-466D-A8C9-F2A01225471A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
