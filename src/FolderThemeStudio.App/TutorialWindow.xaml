@@ -1,0 +1,36 @@
+<Window x:Class="FolderThemeStudio.App.TutorialWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{DynamicResource Tutorial.Title}"
+        Width="650" Height="430" MinWidth="520" MinHeight="360"
+        WindowStartupLocation="CenterOwner" ResizeMode="CanResizeWithGrip">
+    <Window.Icon>Assets/FolderThemeStudio.png</Window.Icon>
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+            <TextBlock FontSize="24" FontWeight="SemiBold" Text="{DynamicResource Tutorial.Title}" />
+            <TextBlock Grid.Column="1" VerticalAlignment="Center" Foreground="{StaticResource MutedTextBrush}" Text="{Binding StepNumber}" />
+        </Grid>
+        <Border Grid.Row="1" Margin="0,20" Style="{StaticResource CardStyle}">
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock FontSize="26" FontWeight="SemiBold" Text="{Binding CurrentStep.Title}" TextWrapping="Wrap" />
+                <TextBlock Margin="0,16,0,0" FontSize="17" Foreground="{StaticResource MutedTextBrush}"
+                           Text="{Binding CurrentStep.Body}" TextWrapping="Wrap" />
+            </StackPanel>
+        </Border>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+            <Button Command="{Binding SkipCommand}" Content="{DynamicResource Common.Skip}" />
+            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                <Button Command="{Binding PreviousCommand}" Content="{DynamicResource Common.Previous}" />
+                <Button Command="{Binding NextCommand}" Content="{DynamicResource Common.Next}" />
+                <Button Style="{StaticResource PrimaryButtonStyle}" Command="{Binding FinishCommand}" Content="{DynamicResource Common.Finish}" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

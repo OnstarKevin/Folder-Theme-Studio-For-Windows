@@ -1,0 +1,129 @@
+<Window x:Class="FolderThemeStudio.App.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{DynamicResource Settings.Title}"
+        Width="980" Height="680" MinWidth="760" MinHeight="560"
+        WindowStartupLocation="CenterOwner"
+        Icon="Assets/FolderThemeStudio.png"
+        UseLayoutRounding="True">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TabControl Grid.Row="0">
+            <TabItem Header="{DynamicResource Settings.General}">
+                <Border Margin="12" Style="{StaticResource CardStyle}">
+                    <StackPanel MaxWidth="480" HorizontalAlignment="Left">
+                        <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{DynamicResource Settings.Language}" />
+                        <ComboBox Width="260" HorizontalAlignment="Left"
+                                  SelectedValue="{Binding SelectedLanguage}"
+                                  SelectedValuePath="Tag">
+                            <ComboBoxItem Tag="zh-CN" Content="{DynamicResource Settings.Chinese}" />
+                            <ComboBoxItem Tag="en-US" Content="{DynamicResource Settings.English}" />
+                        </ComboBox>
+                        <CheckBox Margin="0,24,0,8" IsChecked="{Binding StartWithWindows}"
+                                  Content="登录 Windows 后自动在后台启动并恢复监控" />
+                        <CheckBox Margin="0,4,0,8" IsChecked="{Binding CloseToTray}"
+                                  Content="关闭主窗口时收起到后台" />
+                    </StackPanel>
+                </Border>
+            </TabItem>
+
+            <TabItem Header="{DynamicResource Settings.Palette}" Visibility="Collapsed">
+                <Grid Margin="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="190" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="280" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{DynamicResource Settings.ColorRole}" />
+                            <ListBox ItemsSource="{Binding Roles}" SelectedItem="{Binding SelectedRole}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="2,5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="28" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Border Width="20" Height="20" CornerRadius="4" Background="{Binding Picker.SelectedBrush}" />
+                                            <TextBlock Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center" Text="{Binding DisplayName}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="2" Style="{StaticResource CardStyle}">
+                        <StackPanel DataContext="{Binding SelectedRole.Picker}">
+                            <Border Height="54" Margin="0,0,0,10" CornerRadius="8" Background="{Binding SelectedBrush}" />
+                            <Label Style="{StaticResource FieldLabelStyle}" Content="{DynamicResource Settings.Hue}" />
+                            <Slider Minimum="0" Maximum="359" Value="{Binding Hue}" />
+                            <Label Style="{StaticResource FieldLabelStyle}" Content="{DynamicResource Settings.Saturation}" />
+                            <Slider Minimum="0" Maximum="1" Value="{Binding Saturation}" />
+                            <Label Style="{StaticResource FieldLabelStyle}" Content="{DynamicResource Settings.Value}" />
+                            <Slider Minimum="0" Maximum="1" Value="{Binding Value}" />
+                            <Label Style="{StaticResource FieldLabelStyle}" Content="{DynamicResource Settings.Hex}" />
+                            <TextBox Text="{Binding Hex, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                    </Border>
+
+                    <ScrollViewer Grid.Column="4" VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <Border Style="{StaticResource CardStyle}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{DynamicResource Section.LivePreview}" />
+                                    <Image Width="180" Height="180" Source="{Binding PreviewImage}" Stretch="Uniform" />
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource CardStyle}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{DynamicResource Settings.Recommended}" />
+                                    <ItemsControl ItemsSource="{Binding RecommendedPalettes}">
+                                        <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Button Padding="4" Margin="0,0,6,6" Click="Recommended_Click" ToolTip="{DynamicResource Settings.Recommended}">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Border Width="20" Height="28" Background="{Binding GradientStart}" />
+                                                        <Border Width="20" Height="28" Background="{Binding GradientEnd}" />
+                                                        <Border Width="8" Height="28" Background="{Binding Stroke}" />
+                                                        <Border Width="8" Height="28" Background="{Binding Glow}" />
+                                                    </StackPanel>
+                                                </Button>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <TextBlock Margin="0,10,0,6" FontWeight="SemiBold" Text="{DynamicResource Settings.Recent}" />
+                                    <ItemsControl ItemsSource="{Binding RecentColors}">
+                                        <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Button Width="30" Height="30" Padding="3" Margin="0,0,6,6" Click="Recent_Click">
+                                                    <Border Background="{Binding}" CornerRadius="3" />
+                                                </Button>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <StackPanel Grid.Row="1" Margin="0,14,0,0" HorizontalAlignment="Right" Orientation="Horizontal">
+            <Button Content="{DynamicResource Common.Cancel}" Click="Cancel_Click" />
+            <Button Style="{StaticResource PrimaryButtonStyle}" Content="{DynamicResource Common.Save}"
+                    IsEnabled="{Binding CanSave}" Click="Save_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,325 @@
+<Window x:Class="FolderThemeStudio.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:automation="clr-namespace:System.Windows.Automation;assembly=PresentationCore"
+        xmlns:controls="clr-namespace:FolderThemeStudio.App.Controls"
+        mc:Ignorable="d"
+        Title="{DynamicResource App.Title}"
+        Width="1280"
+        Height="860"
+        MinWidth="620"
+        MinHeight="620"
+        FontFamily="{x:Static SystemFonts.MessageFontFamily}"
+        FontSize="{x:Static SystemFonts.MessageFontSize}"
+        UseLayoutRounding="True"
+        WindowStartupLocation="CenterScreen"
+        Icon="Assets/FolderThemeStudio.png"
+        SizeChanged="Window_SizeChanged"
+        automation:AutomationProperties.Name="{DynamicResource App.AutomationName}">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto"
+                  Focusable="False">
+        <Grid Margin="24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <Image Width="50" Height="50" Margin="0,0,12,0" Source="Assets/FolderThemeStudio.png" />
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock FontSize="26" FontWeight="SemiBold" Text="{DynamicResource App.Title}" />
+                        <TextBlock Margin="0,2,0,0" Foreground="{StaticResource MutedTextBrush}" Text="{DynamicResource App.TitleEnglish}" />
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="TutorialButton" Content="{DynamicResource Top.Tutorial}" Click="Tutorial_Click"
+                            automation:AutomationProperties.Name="{DynamicResource Top.TutorialAutomation}" />
+                    <Button x:Name="SettingsButton" Content="{DynamicResource Top.Settings}" Click="Settings_Click"
+                            automation:AutomationProperties.Name="{DynamicResource Top.SettingsAutomation}" />
+                </StackPanel>
+            </Grid>
+
+            <Grid x:Name="AdaptiveGrid" Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="EditorColumn" Width="1.05*" />
+                    <ColumnDefinition x:Name="ApplicationColumn" Width="0.95*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition x:Name="TopRow" Height="Auto" />
+                    <RowDefinition x:Name="StackedRow" Height="0" />
+                </Grid.RowDefinitions>
+
+                <StackPanel x:Name="EditorPanel" Grid.Row="0" Grid.Column="0" Margin="0,0,10,0" IsEnabled="{Binding AreInputsEnabled}">
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{DynamicResource IconSource.Title}" />
+                            <WrapPanel>
+                                <RadioButton Margin="0,0,24,0" Padding="6" Content="{DynamicResource IconSource.BuiltIn}"
+                                             IsChecked="{Binding IsBuiltInEditor}" />
+                                <RadioButton Padding="6" Content="{DynamicResource IconSource.Imported}"
+                                             IsChecked="{Binding IsImportedImageEditor}" />
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource CardStyle}"
+                            Visibility="{Binding IsImportedImageEditor, Converter={StaticResource BoolToVisibility}}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{DynamicResource ImageImport.Title}" />
+                            <TextBlock Margin="0,0,0,12" Foreground="{StaticResource MutedTextBrush}" TextWrapping="Wrap"
+                                       Text="{DynamicResource ImageImport.Description}" />
+                            <Border Height="230" Padding="12" Background="#FFF7F9FC" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="10">
+                                <Image Source="{Binding ImportedImagePreview}" Stretch="Uniform" />
+                            </Border>
+                            <TextBlock Margin="0,10,0,10" Foreground="{StaticResource MutedTextBrush}" TextTrimming="CharacterEllipsis"
+                                       Text="{Binding ImportedImageAssetPath, TargetNullValue=—}" />
+                            <WrapPanel>
+                                <Button Style="{StaticResource PrimaryButtonStyle}" Command="{Binding ChooseImportedImageCommand}" Content="{DynamicResource ImageImport.Choose}" />
+                                <Button Command="{Binding ClearImportedImageCommand}" Content="{DynamicResource ImageImport.Clear}" />
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource CardStyle}"
+                            Visibility="{Binding IsBuiltInEditor, Converter={StaticResource BoolToVisibility}}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{DynamicResource Section.SavedThemes}" />
+                            <Label Style="{StaticResource FieldLabelStyle}"
+                                   Target="{Binding ElementName=SavedThemePicker}"
+                                   Content="{DynamicResource Field.SavedTheme}" />
+                            <ComboBox x:Name="SavedThemePicker"
+                                      ItemsSource="{Binding SavedThemes}"
+                                      SelectedItem="{Binding SelectedSavedTheme}"
+                                      DisplayMemberPath="Name"
+                                      automation:AutomationProperties.Name="Saved theme" />
+                            <Label Style="{StaticResource FieldLabelStyle}"
+                                   Target="{Binding ElementName=ThemeNameBox}"
+                                   Content="{DynamicResource Field.ThemeName}" />
+                            <TextBox x:Name="ThemeNameBox"
+                                     Text="{Binding ThemeName, UpdateSourceTrigger=PropertyChanged}"
+                                     automation:AutomationProperties.Name="Theme name" />
+                            <WrapPanel Margin="0,12,0,0">
+                                <Button Command="{Binding SaveThemeCommand}"
+                                        Content="{DynamicResource Button.SaveTheme}"
+                                        automation:AutomationProperties.Name="Save as personal theme" />
+                                <Button Command="{Binding ImportThemeCommand}"
+                                        Content="{DynamicResource Button.ImportTheme}"
+                                        automation:AutomationProperties.Name="Import theme from file" />
+                                <Button Command="{Binding ExportThemeCommand}"
+                                        Content="{DynamicResource Button.ExportTheme}"
+                                        automation:AutomationProperties.Name="Export selected theme" />
+                                <Button Command="{Binding DeleteThemeCommand}"
+                                        Content="{DynamicResource Button.DeleteTheme}"
+                                        automation:AutomationProperties.Name="Delete selected personal theme" />
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource CardStyle}"
+                            Visibility="{Binding IsBuiltInEditor, Converter={StaticResource BoolToVisibility}}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{DynamicResource Section.ColorMaterial}" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="16" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <Label Style="{StaticResource FieldLabelStyle}" Target="{Binding ElementName=GradientStartBox}" Content="{DynamicResource Field.GradientStart}" />
+                                    <TextBox x:Name="GradientStartBox" Text="{Binding GradientStart, UpdateSourceTrigger=PropertyChanged}" automation:AutomationProperties.Name="Gradient start hexadecimal color" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <Label Style="{StaticResource FieldLabelStyle}" Target="{Binding ElementName=GradientEndBox}" Content="{DynamicResource Field.GradientEnd}" />
+                                    <TextBox x:Name="GradientEndBox" Text="{Binding GradientEnd, UpdateSourceTrigger=PropertyChanged}" automation:AutomationProperties.Name="Gradient end hexadecimal color" />
+                                </StackPanel>
+                            </Grid>
+                            <Label Style="{StaticResource FieldLabelStyle}" Target="{Binding ElementName=GradientAngleSlider}" Content="{DynamicResource Field.GradientAngle}" />
+                            <Slider x:Name="GradientAngleSlider" Minimum="0" Maximum="360" TickFrequency="15" IsSnapToTickEnabled="False" Value="{Binding GradientAngle}" automation:AutomationProperties.Name="Gradient angle" />
+                            <Label Style="{StaticResource FieldLabelStyle}" Target="{Binding ElementName=OpacitySlider}" Content="{DynamicResource Field.Opacity}" />
+                            <Slider x:Name="OpacitySlider" Minimum="0" Maximum="1" TickFrequency="0.05" Value="{Binding Opacity}" automation:AutomationProperties.Name="Folder opacity" />
+                            <Label Style="{StaticResource FieldLabelStyle}" Target="{Binding ElementName=HighlightSlider}" Content="{DynamicResource Field.Highlight}" />
+                            <Slider x:Name="HighlightSlider" Minimum="0" Maximum="1" TickFrequency="0.05" Value="{Binding HighlightStrength}" automation:AutomationProperties.Name="Highlight strength" />
+                            <Label Style="{StaticResource FieldLabelStyle}" Target="{Binding ElementName=GlowColorBox}" Content="{DynamicResource Field.GlowColor}" />
+                            <TextBox x:Name="GlowColorBox" Text="{Binding GlowColor, UpdateSourceTrigger=PropertyChanged}" automation:AutomationProperties.Name="Glow hexadecimal color" />
+                            <Label Style="{StaticResource FieldLabelStyle}" Target="{Binding ElementName=GlowStrengthSlider}" Content="{DynamicResource Field.GlowStrength}" />
+                            <Slider x:Name="GlowStrengthSlider" Minimum="0" Maximum="1" TickFrequency="0.05" Value="{Binding GlowStrength}" automation:AutomationProperties.Name="Glow strength" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource CardStyle}"
+                            Visibility="{Binding IsBuiltInEditor, Converter={StaticResource BoolToVisibility}}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{DynamicResource Palette.Title}" />
+                            <TextBlock Margin="0,0,0,10" Foreground="{StaticResource MutedTextBrush}" TextWrapping="Wrap"
+                                       Text="{DynamicResource Palette.Description}" />
+                            <ComboBox Margin="0,0,0,12" ItemsSource="{Binding PaletteEditor.Roles}"
+                                      SelectedItem="{Binding PaletteEditor.SelectedRole}" DisplayMemberPath="DisplayName" />
+                            <controls:VisualColorPicker DataContext="{Binding PaletteEditor.SelectedRole.Picker}" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource CardStyle}"
+                            Visibility="{Binding IsBuiltInEditor, Converter={StaticResource BoolToVisibility}}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{DynamicResource Section.EdgeDepth}" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="16" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <Label Style="{StaticResource FieldLabelStyle}" Target="{Binding ElementName=StrokeColorBox}" Content="{DynamicResource Field.StrokeColor}" />
+                                    <TextBox x:Name="StrokeColorBox" Text="{Binding StrokeColor, UpdateSourceTrigger=PropertyChanged}" automation:AutomationProperties.Name="Stroke hexadecimal color" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <Label Style="{StaticResource FieldLabelStyle}" Target="{Binding ElementName=StrokeWidthSlider}" Content="{DynamicResource Field.StrokeWidth}" />
+                                    <Slider x:Name="StrokeWidthSlider" Minimum="0" Maximum="8" TickFrequency="0.25" Value="{Binding StrokeWidth}" automation:AutomationProperties.Name="Stroke width" />
+                                </StackPanel>
+                            </Grid>
+                            <Label Style="{StaticResource FieldLabelStyle}" Target="{Binding ElementName=StrokeOpacitySlider}" Content="{DynamicResource Field.StrokeOpacity}" />
+                            <Slider x:Name="StrokeOpacitySlider" Minimum="0" Maximum="1" TickFrequency="0.05" Value="{Binding StrokeOpacity}" automation:AutomationProperties.Name="Stroke opacity" />
+                            <Label Style="{StaticResource FieldLabelStyle}" Target="{Binding ElementName=CornerRadiusSlider}" Content="{DynamicResource Field.CornerRadius}" />
+                            <Slider x:Name="CornerRadiusSlider" Minimum="0" Maximum="36" TickFrequency="1" Value="{Binding CornerRadius}" automation:AutomationProperties.Name="Corner radius" />
+                            <Label Style="{StaticResource FieldLabelStyle}" Target="{Binding ElementName=GlowRadiusSlider}" Content="{DynamicResource Field.GlowRadius}" />
+                            <Slider x:Name="GlowRadiusSlider" Minimum="0" Maximum="24" TickFrequency="1" Value="{Binding GlowRadius}" automation:AutomationProperties.Name="Glow radius" />
+                            <Label Style="{StaticResource FieldLabelStyle}" Target="{Binding ElementName=ShadowStrengthSlider}" Content="{DynamicResource Field.ShadowStrength}" />
+                            <Slider x:Name="ShadowStrengthSlider" Minimum="0" Maximum="1" TickFrequency="0.05" Value="{Binding ShadowStrength}" automation:AutomationProperties.Name="Shadow strength" />
+                            <Label Style="{StaticResource FieldLabelStyle}" Target="{Binding ElementName=ShadowOffsetSlider}" Content="{DynamicResource Field.ShadowOffset}" />
+                            <Slider x:Name="ShadowOffsetSlider" Minimum="0" Maximum="20" TickFrequency="1" Value="{Binding ShadowOffset}" automation:AutomationProperties.Name="Shadow offset" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel x:Name="ApplicationPanel" Grid.Row="0" Grid.Column="1" Margin="10,0,0,0">
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{DynamicResource Section.LivePreview}" />
+                            <TextBlock Foreground="{StaticResource MutedTextBrush}"
+                                       TextWrapping="Wrap"
+                                       Text="{DynamicResource Preview.Description}" />
+                            <TextBlock Margin="0,12,0,5" FontWeight="SemiBold" Text="{DynamicResource Preview.Light}" />
+                            <Border Padding="12" Background="#FFF7F9FC" BorderBrush="#D7DFEA" BorderThickness="1" CornerRadius="8">
+                                <ItemsControl ItemsSource="{Binding Previews}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate><WrapPanel VerticalAlignment="Bottom" /></ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Margin="8" VerticalAlignment="Bottom">
+                                                <Image Width="{Binding Size}" Height="{Binding Size}" Source="{Binding Image}" Stretch="Uniform" automation:AutomationProperties.Name="{Binding Size, StringFormat={}{0} pixel folder preview on light background}" />
+                                                <TextBlock Margin="0,5,0,0" HorizontalAlignment="Center" Text="{Binding Size, StringFormat={}{0}px}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Border>
+                            <TextBlock Margin="0,12,0,5" FontWeight="SemiBold" Text="{DynamicResource Preview.Dark}" />
+                            <Border Padding="12" Background="#FF172033" CornerRadius="8">
+                                <ItemsControl ItemsSource="{Binding Previews}" Foreground="White">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate><WrapPanel VerticalAlignment="Bottom" /></ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Margin="8" VerticalAlignment="Bottom">
+                                                <Image Width="{Binding Size}" Height="{Binding Size}" Source="{Binding Image}" Stretch="Uniform" automation:AutomationProperties.Name="{Binding Size, StringFormat={}{0} pixel folder preview on dark background}" />
+                                                <TextBlock Margin="0,5,0,0" Foreground="White" HorizontalAlignment="Center" Text="{Binding Size, StringFormat={}{0}px}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Border>
+                            <TextBlock Margin="0,12,0,0"
+                                       TextWrapping="Wrap"
+                                       Text="{Binding ValidationMessage}"
+                                       automation:AutomationProperties.LiveSetting="Polite" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{DynamicResource Section.ApplySafely}" />
+                            <Label Style="{StaticResource FieldLabelStyle}" Target="{Binding ElementName=ModePicker}" Content="{DynamicResource Field.ApplicationMode}" />
+                            <ComboBox x:Name="ModePicker"
+                                      ItemsSource="{Binding AvailableModes}"
+                                      SelectedItem="{Binding SelectedMode}"
+                                      IsEnabled="{Binding AreInputsEnabled}"
+                                      automation:AutomationProperties.Name="Application mode" />
+                            <TextBlock Margin="0,8,0,12" Foreground="{StaticResource MutedTextBrush}" TextWrapping="Wrap" Text="{DynamicResource Apply.Description}" />
+
+                            <Label Style="{StaticResource FieldLabelStyle}" Target="{Binding ElementName=RootList}" Content="{DynamicResource Field.Roots}" />
+                            <ListBox x:Name="RootList"
+                                     MinHeight="70"
+                                     MaxHeight="150"
+                                     ItemsSource="{Binding SelectedRoots}"
+                                     IsEnabled="{Binding AreInputsEnabled}"
+                                     automation:AutomationProperties.Name="Explicit folder roots" />
+                            <WrapPanel Margin="0,8,0,0">
+                                <Button Command="{Binding AddRootCommand}" Content="{DynamicResource Button.AddFolder}" automation:AutomationProperties.Name="Add explicit folder root" />
+                                <Button Command="{Binding RemoveRootCommand}" CommandParameter="{Binding SelectedItem, ElementName=RootList}" Content="{DynamicResource Button.RemoveFolder}" automation:AutomationProperties.Name="Remove selected folder root" />
+                            </WrapPanel>
+
+                            <StackPanel Visibility="{Binding IsCompatibleMode, Converter={StaticResource BoolToVisibility}}">
+                                <CheckBox Margin="0,6,0,8" Content="持续应用到该目录中新建的文件夹（递归）"
+                                          IsChecked="{Binding ContinueApplyingToNewFolders}" />
+                                <TextBlock Foreground="{StaticResource MutedTextBrush}" TextWrapping="Wrap" Text="{Binding MonitoringStatusText}" />
+                                <WrapPanel Margin="0,8,0,0">
+                                    <Button Command="{Binding ToggleMonitoringCommand}" Content="暂停 / 继续监控" />
+                                    <Button Command="{Binding RemoveMonitoringRuleCommand}"
+                                            CommandParameter="{Binding SelectedItem, ElementName=RootList}"
+                                            Content="停止监控所选目录" />
+                                </WrapPanel>
+                            </StackPanel>
+
+                            <WrapPanel Margin="0,8,0,0">
+                                <Button Command="{Binding PlanCommand}" Content="{DynamicResource Button.CalculatePlan}" automation:AutomationProperties.Name="Calculate write-free application plan" />
+                                <TextBlock Margin="8,8,16,0" Text="{Binding PlanAllowedCount, StringFormat=Allowed: {0}}" />
+                                <TextBlock Margin="0,8,0,0" Text="{Binding PlanSkippedCount, StringFormat=Skipped: {0}}" />
+                            </WrapPanel>
+                            <TextBlock Margin="0,4,0,14" Foreground="{StaticResource MutedTextBrush}" TextWrapping="Wrap" Text="{Binding PlanDetails}" />
+
+                            <WrapPanel>
+                                <Button Style="{StaticResource PrimaryButtonStyle}" Command="{Binding ApplyCommand}" Content="{DynamicResource Button.Apply}" automation:AutomationProperties.Name="Apply folder theme" />
+                                <Button MinHeight="44" Command="{Binding RestoreCommand}" Content="{DynamicResource Button.Restore}" automation:AutomationProperties.Name="Restore latest recovery snapshot" />
+                            </WrapPanel>
+
+                            <ProgressBar Height="8" Margin="0,8,0,6" Minimum="0" Maximum="{Binding ProgressTotal, FallbackValue=1, TargetNullValue=1}" Value="{Binding ProgressCompleted, Mode=OneWay}" automation:AutomationProperties.Name="Operation progress" />
+                            <TextBlock TextWrapping="Wrap" Text="{Binding ProgressMessage}" automation:AutomationProperties.LiveSetting="Polite" />
+                            <TextBlock Margin="0,8,0,0" FontWeight="SemiBold" TextWrapping="Wrap" Text="{Binding OperationStatus}" automation:AutomationProperties.LiveSetting="Assertive" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{DynamicResource Section.Results}" />
+                            <TextBlock Margin="0,0,0,8" FontWeight="SemiBold" Text="{Binding ResultSummary}" />
+                            <ListView MinHeight="120" MaxHeight="260" ItemsSource="{Binding Results}" automation:AutomationProperties.Name="Application and restore results">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn Width="80" Header="{DynamicResource Result.Status}" DisplayMemberBinding="{Binding StatusLabel}" />
+                                        <GridViewColumn Width="180" Header="{DynamicResource Result.Path}" DisplayMemberBinding="{Binding Path}" />
+                                        <GridViewColumn Width="240" Header="{DynamicResource Result.Detail}" DisplayMemberBinding="{Binding Detail}" />
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                            <WrapPanel Margin="0,10,0,0">
+                                <Button Command="{Binding CopyFailedPathsCommand}" Content="{DynamicResource Button.CopyFailed}" automation:AutomationProperties.Name="Copy failed paths" />
+                                <Button Command="{Binding ExportFailedPathsCommand}" Content="{DynamicResource Button.ExportFailure}" automation:AutomationProperties.Name="Export failure report" />
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</Window>

@@ -1,0 +1,67 @@
+<UserControl x:Class="FolderThemeStudio.App.Controls.VisualColorPicker"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             MinWidth="300">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="16" />
+            <ColumnDefinition Width="28" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="210" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Border x:Name="PaletteSurface" Grid.Column="0" CornerRadius="8"
+                Background="{Binding HueBrush}"
+                MouseLeftButtonDown="Palette_Mouse" MouseMove="Palette_Mouse"
+                MouseLeftButtonUp="EndMouseInteraction">
+            <Grid ClipToBounds="True">
+                <Rectangle>
+                    <Rectangle.Fill>
+                        <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                            <GradientStop Color="White" Offset="0" />
+                            <GradientStop Color="#00FFFFFF" Offset="1" />
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <Rectangle>
+                    <Rectangle.Fill>
+                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                            <GradientStop Color="#00000000" Offset="0" />
+                            <GradientStop Color="Black" Offset="1" />
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <Canvas IsHitTestVisible="False">
+                    <Ellipse x:Name="PaletteMarker" Width="14" Height="14" Stroke="White" StrokeThickness="2">
+                        <Ellipse.Effect><DropShadowEffect BlurRadius="3" ShadowDepth="0" /></Ellipse.Effect>
+                    </Ellipse>
+                </Canvas>
+            </Grid>
+        </Border>
+
+        <Border x:Name="HueSurface" Grid.Column="2" CornerRadius="6"
+                MouseLeftButtonDown="Hue_Mouse" MouseMove="Hue_Mouse"
+                MouseLeftButtonUp="EndMouseInteraction">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Color="#FFFF0000" Offset="0" />
+                    <GradientStop Color="#FFFFFF00" Offset="0.167" />
+                    <GradientStop Color="#FF00FF00" Offset="0.333" />
+                    <GradientStop Color="#FF00FFFF" Offset="0.5" />
+                    <GradientStop Color="#FF0000FF" Offset="0.667" />
+                    <GradientStop Color="#FFFF00FF" Offset="0.833" />
+                    <GradientStop Color="#FFFF0000" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+
+        <Grid Grid.Row="1" Grid.ColumnSpan="3" Margin="0,12,0,0">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="48" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+            <Border Width="38" Height="38" CornerRadius="6" Background="{Binding SelectedBrush}" />
+            <TextBox Grid.Column="1" Text="{Binding Hex, UpdateSourceTrigger=PropertyChanged}" />
+        </Grid>
+    </Grid>
+</UserControl>
