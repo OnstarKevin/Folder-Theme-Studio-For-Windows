@@ -19,9 +19,8 @@
 
 ## 简体中文
 效果图：<img width="425" height="226" alt="下载" src="https://github.com/user-attachments/assets/9ac96be8-a2f4-4a78-a543-426bfd5eb237" />
-<img width="425" height="226" alt="下载" src="https://github.com/user-attachments/assets/05111b6e-5417-44a5-a372-ed53907e7596" />
-<img width="512" height="512" alt="ex3" src="https://github.com/user-attachments/assets/b5b4630b-d221-452a-8ae9-57386d8ad549" />
-<img width="512" height="512" alt="ex2" src="https://github.com/user-attachments/assets/03eb9e17-be19-4edf-b918-87ab5e9950cc" />
+<img width="512" height="334" alt="ex3" src="https://github.com/user-attachments/assets/b5b4630b-d221-452a-8ae9-57386d8ad549" />
+<img width="512" height="334" alt="ex2" src="https://github.com/user-attachments/assets/03eb9e17-be19-4edf-b918-87ab5e9950cc" />
 
 
 Folder Theme Studio 是一款面向 Windows 10/11 x64 的开源文件夹图标定制工具。它只处理普通文件夹图标，不替换文件资源管理器、不修改文件类型图标，也不会把系统特殊文件夹当作普通目录处理。
