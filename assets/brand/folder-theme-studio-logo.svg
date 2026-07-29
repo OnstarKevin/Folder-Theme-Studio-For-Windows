@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Folder Theme Studio</title>
+  <desc id="desc">A blue violet folder outline with a magic wand and stars.</desc>
+  <defs>
+    <linearGradient id="folderFill" x1="42" y1="62" x2="211" y2="207" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EDF7FF"/>
+      <stop offset="1" stop-color="#DDD6FE"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="138" y1="164" x2="218" y2="70" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2563EB"/>
+      <stop offset="1" stop-color="#8B5CF6"/>
+    </linearGradient>
+  </defs>
+  <path d="M39 83V72c0-9 7-16 16-16h49l21 21h70c12 0 22 10 22 22v87c0 12-10 22-22 22H61c-12 0-22-10-22-22V83Z"
+        fill="url(#folderFill)" stroke="#4257D6" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M45 90h166" fill="none" stroke="#7C8CE8" stroke-width="7" stroke-linecap="round"/>
+  <path d="m137 169 68-78" fill="none" stroke="url(#accent)" stroke-width="13" stroke-linecap="round"/>
+  <path d="m143 163 56-65" fill="none" stroke="#FFFFFF" stroke-opacity=".8" stroke-width="3" stroke-linecap="round"/>
+  <path d="m210 63 5 13 13 5-13 5-5 13-5-13-13-5 13-5 5-13Z" fill="#FBBF24" stroke="#FFFFFF" stroke-width="3"/>
+  <path d="m170 78 3 8 8 3-8 3-3 8-3-8-8-3 8-3 3-8Z" fill="#60A5FA"/>
+</svg>
