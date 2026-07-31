@@ -26,6 +26,7 @@ public interface IImportedImageService
 public sealed class ImportedImageService : IImportedImageService
 {
     private static readonly byte[] PngSignature = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
+    private static readonly byte[] IcoSignature = [0x00, 0x00, 0x01, 0x00];
     private readonly string importsRoot;
 
     public ImportedImageService()
@@ -58,10 +59,10 @@ public sealed class ImportedImageService : IImportedImageService
             var expected = FormatForExtension(Path.GetExtension(fullSourcePath));
             if (detected is null || expected is null || detected != expected)
             {
-                return ImportedImageResult.Failure("Choose a valid PNG, JPEG, or BMP image whose extension matches its contents.");
+                return ImportedImageResult.Failure("Choose a valid PNG, JPEG, BMP, or ICO image whose extension matches its contents.");
             }
 
-            var normalized = Decode(bytes);
+            var normalized = Decode(bytes, detected);
             var pngBytes = EncodePng(normalized);
             var hash = Convert.ToHexString(SHA256.HashData(pngBytes)).ToLowerInvariant();
             Directory.CreateDirectory(importsRoot);
@@ -87,7 +88,9 @@ public sealed class ImportedImageService : IImportedImageService
                 }
             }
 
-            var preview = Decode(await File.ReadAllBytesAsync(destination, token).ConfigureAwait(false));
+            var preview = Decode(
+                await File.ReadAllBytesAsync(destination, token).ConfigureAwait(false),
+                "png");
             return ImportedImageResult.Succeeded(destination, preview);
         }
         catch (OperationCanceledException)
@@ -109,6 +112,7 @@ public sealed class ImportedImageService : IImportedImageService
     private static string? DetectFormat(ReadOnlySpan<byte> bytes)
     {
         if (bytes.StartsWith(PngSignature)) return "png";
+        if (bytes.StartsWith(IcoSignature)) return "ico";
         if (bytes.Length >= 3 && bytes[0] == 0xFF && bytes[1] == 0xD8 && bytes[2] == 0xFF) return "jpeg";
         if (bytes.Length >= 2 && bytes[0] == 0x42 && bytes[1] == 0x4D) return "bmp";
         return null;
@@ -119,15 +123,22 @@ public sealed class ImportedImageService : IImportedImageService
         ".png" => "png",
         ".jpg" or ".jpeg" => "jpeg",
         ".bmp" => "bmp",
+        ".ico" => "ico",
         _ => null
     };
 
-    private static BitmapSource Decode(byte[] bytes)
+    private static BitmapSource Decode(byte[] bytes, string format)
     {
         using var stream = new MemoryStream(bytes, writable: false);
         var decoder = BitmapDecoder.Create(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
         if (decoder.Frames.Count == 0) throw new FileFormatException("The image has no decodable frame.");
-        var converted = new FormatConvertedBitmap(decoder.Frames[0], PixelFormats.Pbgra32, null, 0);
+        var source = format == "ico"
+            ? decoder.Frames
+                .OrderByDescending(frame => checked((long)frame.PixelWidth * frame.PixelHeight))
+                .ThenByDescending(frame => frame.Format.BitsPerPixel)
+                .First()
+            : decoder.Frames[0];
+        var converted = new FormatConvertedBitmap(source, PixelFormats.Pbgra32, null, 0);
         converted.Freeze();
         return converted;
     }
