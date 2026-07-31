@@ -1,9 +1,10 @@
 using System.Windows;
+using FolderThemeStudio.App.Controls;
 using FolderThemeStudio.App.ViewModels;
 
 namespace FolderThemeStudio.App;
 
-public partial class TutorialWindow : Window
+public partial class TutorialWindow : RoundedWindow
 {
     private readonly TutorialViewModel viewModel;
 

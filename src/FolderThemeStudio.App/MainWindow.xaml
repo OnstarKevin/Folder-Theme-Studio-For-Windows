@@ -1,4 +1,4 @@
-<Window x:Class="FolderThemeStudio.App.MainWindow"
+<controls:RoundedWindow x:Class="FolderThemeStudio.App.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -67,6 +67,11 @@
                                 <RadioButton Padding="6" Content="{DynamicResource IconSource.Imported}"
                                              IsChecked="{Binding IsImportedImageEditor}" />
                             </WrapPanel>
+                            <TextBlock x:Name="ImmediateUseHint"
+                                       Margin="0,8,0,0"
+                                       Foreground="{StaticResource MutedTextBrush}"
+                                       TextWrapping="Wrap"
+                                       Text="{DynamicResource IconSource.ImmediateUseHint}" />
                         </StackPanel>
                     </Border>
 
@@ -322,4 +327,4 @@
             </Grid>
         </Grid>
     </ScrollViewer>
-</Window>
+</controls:RoundedWindow>

@@ -11,6 +11,36 @@ namespace FolderThemeStudio.Core.Tests.Application;
 public sealed class MainWindowTests
 {
     [Fact]
+    public void ImmediateUseHint_ExplainsThatSavingIsOptionalInBothLanguages()
+    {
+        var fixture = new MainViewModelFixture();
+        var viewModel = fixture.CreateViewModel();
+        LocalizationService? localization = null;
+        MainWindow? window = null;
+
+        try
+        {
+            WpfTestHost.Invoke(() =>
+            {
+                localization = new LocalizationService("zh-CN");
+                window = new MainWindow(
+                    viewModel,
+                    new JsonAppSettingsStore(),
+                    localization,
+                    AppSettings.Default with { CloseToTray = false });
+                var hint = Assert.IsType<System.Windows.Controls.TextBlock>(window.FindName("ImmediateUseHint"));
+                Assert.Contains("无需保存", hint.Text);
+                localization.ApplyLanguage("en-US");
+                Assert.Contains("without saving", hint.Text, StringComparison.OrdinalIgnoreCase);
+            });
+        }
+        finally
+        {
+            if (window is not null) WpfTestHost.Invoke(window.RequestExplicitExit);
+        }
+    }
+
+    [Fact]
     public void TopActions_UpdateWhenLanguageChanges()
     {
         using var directory = new TemporaryDirectory();

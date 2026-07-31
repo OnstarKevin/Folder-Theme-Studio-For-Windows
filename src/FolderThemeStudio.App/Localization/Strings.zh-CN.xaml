@@ -9,7 +9,7 @@
     <sys:String x:Key="Top.Settings">设置</sys:String>
     <sys:String x:Key="Top.TutorialAutomation">打开使用教程</sys:String>
     <sys:String x:Key="Top.SettingsAutomation">打开设置</sys:String>
-    <sys:String x:Key="Section.SavedThemes">已保存主题</sys:String>
+    <sys:String x:Key="Section.SavedThemes">个人主题（可选）</sys:String>
     <sys:String x:Key="Section.ColorMaterial">颜色与材质</sys:String>
     <sys:String x:Key="Section.EdgeDepth">边缘与层次</sys:String>
     <sys:String x:Key="Section.LivePreview">实时预览</sys:String>
@@ -90,6 +90,7 @@
     <sys:String x:Key="IconSource.Title">图标来源</sys:String>
     <sys:String x:Key="IconSource.BuiltIn">内置文件夹样式</sys:String>
     <sys:String x:Key="IconSource.Imported">导入图片图标</sys:String>
+    <sys:String x:Key="IconSource.ImmediateUseHint">当前编辑或刚导入的图标无需保存即可直接预览、计算方案并应用；保存个人主题仅用于以后复用。</sys:String>
     <sys:String x:Key="ImageImport.Title">自定义图片图标</sys:String>
     <sys:String x:Key="ImageImport.Description">导入 PNG、JPG、BMP 或 ICO。图片会保持比例并自动居中，空白区域保持透明。</sys:String>
     <sys:String x:Key="ImageImport.Empty">尚未选择图片</sys:String>

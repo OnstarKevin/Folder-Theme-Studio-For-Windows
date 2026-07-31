@@ -1,6 +1,7 @@
-<Window x:Class="FolderThemeStudio.App.SettingsWindow"
+<controls:RoundedWindow x:Class="FolderThemeStudio.App.SettingsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:FolderThemeStudio.App.Controls"
         Title="{DynamicResource Settings.Title}"
         Width="980" Height="680" MinWidth="760" MinHeight="560"
         WindowStartupLocation="CenterOwner"
@@ -126,4 +127,4 @@
                     IsEnabled="{Binding CanSave}" Click="Save_Click" />
         </StackPanel>
     </Grid>
-</Window>
+</controls:RoundedWindow>

@@ -1,10 +1,11 @@
 using System.Windows;
+using FolderThemeStudio.App.Controls;
 using FolderThemeStudio.App.Settings;
 using FolderThemeStudio.App.ViewModels;
 
 namespace FolderThemeStudio.App;
 
-public partial class SettingsWindow : Window
+public partial class SettingsWindow : RoundedWindow
 {
     private readonly SettingsViewModel viewModel;
 

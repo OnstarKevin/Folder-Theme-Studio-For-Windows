@@ -52,6 +52,25 @@ public sealed class MainViewModelTests
         Assert.Same(fixture.Renderer.Pixel, vm.ImportedImagePreview);
         Assert.Equal(IconSourceKind.ImportedImage, fixture.Coordinator.LastRequest!.IconSource.Kind);
         Assert.Equal(@"C:\AppData\imports\asset.png", fixture.Coordinator.LastRequest.IconSource.ImportedImagePath);
+        Assert.True(vm.CanApply);
+        await vm.ApplyAsync();
+        Assert.Equal(1, fixture.Coordinator.ApplyCallCount);
+    }
+
+    [Fact]
+    public async Task UnsavedBuiltInEdit_PlansWithCurrentThemeWithoutSaving()
+    {
+        var fixture = new MainViewModelFixture();
+        using var vm = fixture.CreateViewModel();
+        await vm.WaitForPreviewAsync();
+
+        vm.GradientStart = "#22AAFF";
+        await vm.WaitForPreviewAsync();
+        await vm.PlanAsync();
+
+        Assert.Null(vm.SelectedSavedTheme);
+        Assert.Equal(IconSourceKind.BuiltIn, fixture.Coordinator.LastRequest!.IconSource.Kind);
+        Assert.Equal("#22AAFF", fixture.Coordinator.LastRequest.IconSource.Theme!.GradientStart);
     }
 
     [Fact]

@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.ComponentModel;
+using FolderThemeStudio.App.Controls;
 using FolderThemeStudio.App.Localization;
 using FolderThemeStudio.App.Services;
 using FolderThemeStudio.App.Settings;
@@ -8,7 +9,7 @@ using FolderThemeStudio.App.ViewModels;
 
 namespace FolderThemeStudio.App;
 
-public partial class MainWindow : Window
+public partial class MainWindow : RoundedWindow
 {
     private const double StackedLayoutWidth = 900;
     private readonly MainViewModel viewModel;

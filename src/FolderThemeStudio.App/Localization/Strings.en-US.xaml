@@ -9,7 +9,7 @@
     <sys:String x:Key="Top.Settings">_Settings</sys:String>
     <sys:String x:Key="Top.TutorialAutomation">Open tutorial</sys:String>
     <sys:String x:Key="Top.SettingsAutomation">Open settings</sys:String>
-    <sys:String x:Key="Section.SavedThemes">Saved themes</sys:String>
+    <sys:String x:Key="Section.SavedThemes">Personal themes (optional)</sys:String>
     <sys:String x:Key="Section.ColorMaterial">Color and material</sys:String>
     <sys:String x:Key="Section.EdgeDepth">Edge and depth</sys:String>
     <sys:String x:Key="Section.LivePreview">Live preview</sys:String>
@@ -90,6 +90,7 @@
     <sys:String x:Key="IconSource.Title">Icon source</sys:String>
     <sys:String x:Key="IconSource.BuiltIn">Built-in folder style</sys:String>
     <sys:String x:Key="IconSource.Imported">Imported image icon</sys:String>
+    <sys:String x:Key="IconSource.ImmediateUseHint">Current edits and newly imported icons can be previewed, planned, and applied without saving. Save a personal theme only for later reuse.</sys:String>
     <sys:String x:Key="ImageImport.Title">Custom image icon</sys:String>
     <sys:String x:Key="ImageImport.Description">Import a PNG, JPG, BMP, or ICO. The image keeps its aspect ratio, is centered, and uses transparent padding.</sys:String>
     <sys:String x:Key="ImageImport.Empty">No image selected</sys:String>
