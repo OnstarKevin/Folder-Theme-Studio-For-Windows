@@ -2,7 +2,7 @@
 
 ## Install and start
 
-1. Run `FolderThemeStudio-v0.1.0-beta.6-setup.exe`.
+1. Run `FolderThemeStudio-v0.1.0-beta.7-setup.exe`.
 2. Stay online if the installer needs to install the x64 .NET 8 Desktop Runtime.
 3. Tutorial and Settings are always available at the top; language selection is in Settings.
 
@@ -16,7 +16,7 @@
 ## Import an image icon
 
 1. Choose Imported image icon under Icon source.
-2. Select a PNG, JPG, JPEG, or BMP image. GIF is not supported.
+2. Select a PNG, JPG, JPEG, BMP, or ICO image. GIF is not supported. For a multi-size ICO, the largest available layer is selected automatically.
 3. The whole image becomes the icon; its aspect ratio is preserved, it is centered, and transparent padding is added.
 4. Review the preview, calculate the plan, and apply it.
 

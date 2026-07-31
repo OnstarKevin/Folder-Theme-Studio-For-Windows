@@ -1,10 +1,33 @@
 using FolderThemeStudio.App.Localization;
+using FolderThemeStudio.Core.Tests.TestSupport;
+using System.Windows;
 using Xunit;
 
 namespace FolderThemeStudio.Core.Tests.Application;
 
 public sealed class LocalizationServiceTests
 {
+    [Fact]
+    public void ImageImportDescription_ListsIcoInBothLanguages()
+    {
+        WpfTestHost.Invoke(() =>
+        {
+            foreach (var language in new[] { "zh-CN", "en-US" })
+            {
+                var dictionary = new ResourceDictionary
+                {
+                    Source = new Uri(
+                        $"/FolderThemeStudio.App;component/Localization/Strings.{language}.xaml",
+                        UriKind.Relative)
+                };
+                Assert.Contains(
+                    "ICO",
+                    Assert.IsType<string>(dictionary["ImageImport.Description"]),
+                    StringComparison.OrdinalIgnoreCase);
+            }
+        });
+    }
+
     [Fact]
     public void ApplyLanguage_ChangesSelectedTextAtRuntime()
     {

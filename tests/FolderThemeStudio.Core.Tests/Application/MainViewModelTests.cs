@@ -79,6 +79,7 @@ public sealed class MainViewModelTests
 
         Assert.False(vm.CanPlan);
         Assert.Contains("PNG", vm.ValidationMessage, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("ICO", vm.ValidationMessage, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]

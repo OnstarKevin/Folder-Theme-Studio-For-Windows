@@ -7,6 +7,22 @@ namespace FolderThemeStudio.Core.Tests.Rendering;
 
 public sealed class ImportedImageServiceTests
 {
+    [Fact]
+    public async Task ImportAsync_MultiSizeIco_SelectsLargestFrameAndPreservesTransparency()
+    {
+        using var temp = new TemporaryDirectory();
+        var source = TestImageFiles.WriteIco("sample.ico", temp.Path);
+
+        var result = await new ImportedImageService(Path.Combine(temp.Path, "imports"))
+            .ImportAsync(source, CancellationToken.None);
+
+        Assert.True(result.Success, result.Error);
+        Assert.EndsWith(".png", result.AssetPath, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal(256, result.Preview!.PixelWidth);
+        Assert.Equal(256, result.Preview.PixelHeight);
+        Assert.Equal(0, TestImageFiles.AlphaAt(result.Preview, 0, 0));
+    }
+
     [Theory]
     [InlineData("sample.png")]
     [InlineData("sample.jpg")]
@@ -39,6 +55,21 @@ public sealed class ImportedImageServiceTests
 
         Assert.False(result.Success);
         Assert.Null(result.AssetPath);
+    }
+
+    [Fact]
+    public async Task ImportAsync_CorruptIco_IsRejected()
+    {
+        using var temp = new TemporaryDirectory();
+        var path = Path.Combine(temp.Path, "broken.ico");
+        await File.WriteAllBytesAsync(path, [0x00, 0x00, 0x01, 0x00, 0x01, 0x00]);
+
+        var result = await new ImportedImageService(Path.Combine(temp.Path, "imports"))
+            .ImportAsync(path, CancellationToken.None);
+
+        Assert.False(result.Success);
+        Assert.Null(result.AssetPath);
+        Assert.Null(result.Preview);
     }
 
     [Fact]

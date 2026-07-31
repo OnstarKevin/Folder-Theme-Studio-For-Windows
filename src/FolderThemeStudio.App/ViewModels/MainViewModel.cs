@@ -643,7 +643,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         var result = await importedImageService.ImportAsync(sourcePath, CancellationToken.None);
         if (!result.Success || result.AssetPath is null || result.Preview is null)
         {
-            dialogs.ShowError("无法导入图片", result.Error ?? "请选择有效的 PNG、JPG 或 BMP 图片。");
+            dialogs.ShowError("无法导入图片", result.Error ?? "请选择有效的 PNG、JPG、BMP 或 ICO 图片。");
             return;
         }
 
@@ -1279,7 +1279,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
         IsThemeValid = validation.IsValid;
         if (SelectedIconEditorMode == IconEditorMode.ImportedImage && importedImageAssetPath is null)
         {
-            ValidationMessage = "请先选择一张 PNG、JPG 或 BMP 图片。";
+            ValidationMessage = "请先选择一张 PNG、JPG、BMP 或 ICO 图片。";
         }
         else if ((SelectedIconEditorMode == IconEditorMode.BuiltIn && !validation.IsValid) || serviceValidationErrors.Count > 0)
         {

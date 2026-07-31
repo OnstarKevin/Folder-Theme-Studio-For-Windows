@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [ValidatePattern('^v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$')]
-    [string]$Version = 'v0.1.0-beta.6',
+    [string]$Version = 'v0.1.0-beta.7',
     [string]$DotNetPath = 'dotnet',
     [Parameter(Mandatory)]
     [string]$InnoCompilerPath,
@@ -24,6 +24,7 @@ $solutionPath = Join-Path $repositoryRoot 'FolderThemeStudio.sln'
 $releaseNotesPath = Join-Path $repositoryRoot "docs\releases\$Version.md"
 $installerPath = Join-Path $repositoryRoot 'build\FolderThemeStudio.iss'
 $verificationPath = Join-Path $repositoryRoot 'build\Verify-Release.ps1'
+$sourceArchiveScriptPath = Join-Path $repositoryRoot 'build\New-SourceArchive.ps1'
 $runtimeUrl = 'https://builds.dotnet.microsoft.com/dotnet/WindowsDesktop/8.0.29/windowsdesktop-runtime-8.0.29-win-x64.exe'
 $runtimeSha256 = 'c0ffa16efeb7ef3ac8100a6a9d7089d9c2904ee89f1815557a79a91be584f775'
 
@@ -38,7 +39,7 @@ $dotnetCommand = Get-Command $DotNetPath -ErrorAction Stop
 $resolvedDotNetPath = $dotnetCommand.Source
 $resolvedInnoPath = (Resolve-Path -LiteralPath $InnoCompilerPath -ErrorAction Stop).Path
 
-foreach ($required in @($projectPath, $solutionPath, $releaseNotesPath, $installerPath, $verificationPath, (Join-Path $repositoryRoot 'LICENSE'), (Join-Path $repositoryRoot 'README.md'), (Join-Path $repositoryRoot 'docs\USER-GUIDE.zh-CN.md'), (Join-Path $repositoryRoot 'docs\USER-GUIDE.en-US.md'))) {
+foreach ($required in @($projectPath, $solutionPath, $releaseNotesPath, $installerPath, $verificationPath, $sourceArchiveScriptPath, (Join-Path $repositoryRoot 'LICENSE'), (Join-Path $repositoryRoot 'README.md'), (Join-Path $repositoryRoot 'docs\USER-GUIDE.zh-CN.md'), (Join-Path $repositoryRoot 'docs\USER-GUIDE.en-US.md'))) {
     if (-not (Test-Path -LiteralPath $required)) { throw "Required input not found: $required" }
 }
 
@@ -100,23 +101,7 @@ try {
     foreach ($oldSource in @($sourcePath, $sourceChecksumPath)) {
         if (Test-Path -LiteralPath $oldSource) { Remove-Item -LiteralPath $oldSource -Force }
     }
-    New-Item -ItemType Directory -Path $sourceStagingPath | Out-Null
-    $excludedSegments = @('.git', '.worktrees', '.superpowers', 'artifacts', 'bin', 'obj', 'TestResults')
-    $repositoryPrefix = $repositoryRoot.TrimEnd([IO.Path]::DirectorySeparatorChar) + [IO.Path]::DirectorySeparatorChar
-    foreach ($file in Get-ChildItem -LiteralPath $repositoryRoot -File -Recurse -Force) {
-        if ($file.Name.Equals('desktop.ini', [StringComparison]::OrdinalIgnoreCase)) { continue }
-        if (-not $file.FullName.StartsWith($repositoryPrefix, [StringComparison]::OrdinalIgnoreCase)) {
-            throw "Source file resolved outside repository root: $($file.FullName)"
-        }
-        $relative = $file.FullName.Substring($repositoryPrefix.Length)
-        $segments = $relative -split '[\\/]'
-        if (@($segments | Where-Object { $excludedSegments -contains $_ }).Count -ne 0) { continue }
-        $destination = Join-Path $sourceStagingPath $relative
-        $destinationDirectory = Split-Path -Parent $destination
-        if (-not (Test-Path -LiteralPath $destinationDirectory)) { New-Item -ItemType Directory -Path $destinationDirectory -Force | Out-Null }
-        Copy-Item -LiteralPath $file.FullName -Destination $destination
-    }
-    Compress-Archive -Path (Join-Path $sourceStagingPath '*') -DestinationPath $sourcePath -CompressionLevel Optimal
+    & $sourceArchiveScriptPath -RepositoryRoot $repositoryRoot -SourceStagingPath $sourceStagingPath -DestinationPath $sourcePath
     $sourceHash = (Get-FileHash -LiteralPath $sourcePath -Algorithm SHA256).Hash.ToLowerInvariant()
     "$sourceHash  $sourceName" | Set-Content -LiteralPath $sourceChecksumPath -Encoding ascii -NoNewline
     & $verificationPath -PublishedPath $stagingPath -SetupPath $setupPath -SourceZipPath $sourcePath

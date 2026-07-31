@@ -91,7 +91,7 @@
     <sys:String x:Key="IconSource.BuiltIn">内置文件夹样式</sys:String>
     <sys:String x:Key="IconSource.Imported">导入图片图标</sys:String>
     <sys:String x:Key="ImageImport.Title">自定义图片图标</sys:String>
-    <sys:String x:Key="ImageImport.Description">导入 PNG、JPG 或 BMP。图片会保持比例并自动居中，空白区域保持透明。</sys:String>
+    <sys:String x:Key="ImageImport.Description">导入 PNG、JPG、BMP 或 ICO。图片会保持比例并自动居中，空白区域保持透明。</sys:String>
     <sys:String x:Key="ImageImport.Empty">尚未选择图片</sys:String>
     <sys:String x:Key="ImageImport.Choose">选择图片</sys:String>
     <sys:String x:Key="ImageImport.Clear">清除图片</sys:String>

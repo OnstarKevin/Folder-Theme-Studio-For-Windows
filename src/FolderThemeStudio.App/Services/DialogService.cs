@@ -52,7 +52,7 @@ public sealed class DialogService(Func<Window?> owner) : IMainViewModelDialogs
         var dialog = new OpenFileDialog
         {
             Title = "选择文件夹图标图片",
-            Filter = "图片 (*.png;*.jpg;*.jpeg;*.bmp)|*.png;*.jpg;*.jpeg;*.bmp",
+            Filter = "图片和图标 (*.png;*.jpg;*.jpeg;*.bmp;*.ico)|*.png;*.jpg;*.jpeg;*.bmp;*.ico",
             Multiselect = false,
             CheckFileExists = true
         };

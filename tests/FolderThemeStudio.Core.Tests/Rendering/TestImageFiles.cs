@@ -2,11 +2,21 @@ using System.IO;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using FolderThemeStudio.Core.Rendering;
 
 namespace FolderThemeStudio.Core.Tests.Rendering;
 
 internal static class TestImageFiles
 {
+    internal static string WriteIco(string fileName, string directory)
+    {
+        Directory.CreateDirectory(directory);
+        var path = Path.Combine(directory, fileName);
+        var frames = FolderIconRenderer.RequiredSizes.ToDictionary(size => size, TestPng.Create);
+        File.WriteAllBytes(path, IcoEncoder.Encode(frames));
+        return path;
+    }
+
     internal static string Write(string fileName, int width, int height, string directory)
     {
         Directory.CreateDirectory(directory);
