@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-v0.1.0--beta.6-1769e0" alt="Version v0.1.0-beta.6">
+  <img src="https://img.shields.io/badge/version-v0.1.0--beta.7-1769e0" alt="Version v0.1.0-beta.7">
   <img src="https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078d4" alt="Windows 10/11 x64">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-5c6bc0" alt="Apache-2.0 license"></a>
 </p>
@@ -18,10 +18,6 @@
 ---
 
 ## 简体中文
-效果图：<img width="425" height="226" alt="下载" src="https://github.com/user-attachments/assets/9ac96be8-a2f4-4a78-a543-426bfd5eb237" />
-<img width="512" height="334" alt="ex3" src="https://github.com/user-attachments/assets/b5b4630b-d221-452a-8ae9-57386d8ad549" />
-<img width="512" height="334" alt="ex2" src="https://github.com/user-attachments/assets/03eb9e17-be19-4edf-b918-87ab5e9950cc" />
-
 
 Folder Theme Studio 是一款面向 Windows 10/11 x64 的开源文件夹图标定制工具。它只处理普通文件夹图标，不替换文件资源管理器、不修改文件类型图标，也不会把系统特殊文件夹当作普通目录处理。
 
@@ -30,7 +26,7 @@ Folder Theme Studio 是一款面向 Windows 10/11 x64 的开源文件夹图标�
 ### 功能亮点
 
 - **二维可视化调色板**：直接选择色相、饱和度和亮度，并分别调整渐变起始色、渐变结束色、描边和发光颜色。
-- **图片图标导入**：支持 PNG、JPG、JPEG、BMP；自动保持比例、居中并补充透明边距。
+- **图片图标导入**：支持 PNG、JPG、JPEG、BMP、ICO；自动保持比例、居中并补充透明边距。
 - **多尺寸实时预览**：同步检查 16、32、64、256 px 效果。
 - **两种应用模式**：全局模式统一普通文件夹映射；兼容模式只处理明确选择的目录。
 - **已有样式可再次修改**：仅合并 `Desktop.ini` 中的图标字段，保留其他设置、注释、编码和换行格式。
@@ -39,18 +35,16 @@ Folder Theme Studio 是一款面向 Windows 10/11 x64 的开源文件夹图标�
 - **后台运行**：关闭主窗口默认收起到系统托盘；支持登录 Windows 后自动在后台启动并恢复监控。
 - **中英双语界面**：简体中文与 English 可在设置中切换。
 
-### Beta 6 更新
+### Beta 7 更新
 
-- 已有自定义文件夹不再被统一跳过，现在可以安全地重新应用其他图标。
-- 新增指定目录递归监控和新文件夹样式持久化。
-- 新增系统托盘、暂停/恢复监控、彻底退出和登录 Windows 后后台自启。
-- 改进原有 `Desktop.ini` 的合并、备份和精确恢复流程。
+- 图片图标导入新增 ICO 格式支持，并自动选用多尺寸 ICO 中分辨率最大的图层。
+- 保留 Beta 6 的已有自定义文件夹重设、递归监控、系统托盘与登录后后台自启能力。
 
-完整变更参见 [v0.1.0-beta.6 发布说明](docs/releases/v0.1.0-beta.6.md)。
+完整变更参见 [v0.1.0-beta.7 发布说明](docs/releases/v0.1.0-beta.7.md)。
 
 ### 安装
 
-1. 从项目 Release 下载 `FolderThemeStudio-v0.1.0-beta.6-setup.exe` 及同名 `.sha256` 文件。
+1. 从项目 Release 下载 `FolderThemeStudio-v0.1.0-beta.7-setup.exe` 及同名 `.sha256` 文件。
 2. 核对安装包 SHA-256。
 3. 运行安装器。若系统缺少 x64 `.NET 8 Desktop Runtime`，安装器会联网下载并安装。
 
@@ -58,12 +52,11 @@ Folder Theme Studio 是一款面向 Windows 10/11 x64 的开源文件夹图标�
 
 ### 快速开始
 
-1. 在“图标来源”中选择内置文件夹样式，或导入 PNG、JPG、JPEG、BMP 图片。
+1. 在“图标来源”中选择内置文件夹样式，或导入 PNG、JPG、JPEG、BMP、ICO 图片。
 2. 调整颜色并检查 16、32、64、256 px 实时预览。
 3. 选择全局模式，或在兼容模式中添加一个或多个明确根目录。
 4. 点击“计算方案”，检查允许、跳过和失败项目后再应用。
 5. 如需让新文件夹继续继承样式，启用递归监控；需要撤销时使用“恢复最近备份”。
-6. 重要：应用模式请选择：Compatible (不要使用默认的Global)否则无法正常使用！！！
 
 ### 应用模式
 
@@ -85,8 +78,7 @@ Folder Theme Studio 是一款面向 Windows 10/11 x64 的开源文件夹图标�
 
 - [中文使用教程](docs/USER-GUIDE.zh-CN.md)
 - [English User Guide](docs/USER-GUIDE.en-US.md)
-- [Beta 6 发布说明](docs/releases/v0.1.0-beta.6.md)
-- [双语项目宣传文章](docs/PROMOTION.zh-en.md)
+- [Beta 7 发布说明](docs/releases/v0.1.0-beta.7.md)
 - [人工测试清单](docs/manual-test-checklist.md)
 - [安全策略](SECURITY.md)
 - [参与贡献](CONTRIBUTING.md)
@@ -99,7 +91,7 @@ Folder Theme Studio 是一款面向 Windows 10/11 x64 的开源文件夹图标�
 dotnet restore FolderThemeStudio.sln
 dotnet test FolderThemeStudio.sln -c Release
 dotnet build src\FolderThemeStudio.App\FolderThemeStudio.App.csproj -c Release
-powershell -NoProfile -ExecutionPolicy Bypass -File .\build\Package-Release.ps1 -Version v0.1.0-beta.6 -InnoCompilerPath "$env:LOCALAPPDATA\Programs\Inno Setup 6\ISCC.exe"
+powershell -NoProfile -ExecutionPolicy Bypass -File .\build\Package-Release.ps1 -Version v0.1.0-beta.7 -InnoCompilerPath "$env:LOCALAPPDATA\Programs\Inno Setup 6\ISCC.exe"
 ```
 
 欢迎通过 Issue 提交可复现的问题，也欢迎先阅读 [参与贡献](CONTRIBUTING.md) 后改进界面、文档、兼容性或测试。涉及敏感问题时，请遵循 [安全策略](SECURITY.md)。
@@ -107,11 +99,6 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\build\Package-Release.ps1 
 ### 许可证
 
 本项目基于 [Apache License 2.0](LICENSE) 开源。
-
-### 其他
-本工作室QQ交流群：1042163964
-Buy a Coffee for dev:
-<img width="256" height="256" alt="7246dd13a6a69418598dcdce845765bf" src="https://github.com/user-attachments/assets/d62c875c-7d88-4616-b855-d459c2844e3b" />
 
 ---
 
@@ -124,7 +111,7 @@ You can build a folder style with a visual color palette or import an image as t
 ### Highlights
 
 - **Two-dimensional visual color palette**: pick hue, saturation, and brightness directly, then tune gradient start, gradient end, stroke, and glow independently.
-- **Image icon import**: supports PNG, JPG, JPEG, and BMP, preserving aspect ratio while centering the image on transparent padding.
+- **Image icon import**: supports PNG, JPG, JPEG, BMP, and ICO, preserving aspect ratio while centering the image on transparent padding.
 - **Live multi-size preview**: inspect the result at 16, 32, 64, and 256 px.
 - **Two application modes**: Global mode updates the ordinary-folder mapping; Compatible mode stays within explicitly selected roots.
 - **Restyle existing custom folders**: only icon-related fields in `Desktop.ini` are merged, while unrelated settings, comments, encoding, and line endings are retained.
@@ -133,18 +120,16 @@ You can build a folder style with a visual color palette or import an image as t
 - **Background operation**: closing the main window minimizes to the system tray by default; monitoring can resume automatically in the background after Windows sign-in.
 - **Bilingual interface**: switch between Simplified Chinese and English in Settings.
 
-### What is new in Beta 6
+### What is new in Beta 7
 
-- Existing customized folders are no longer rejected as a group and can be restyled safely.
-- Added persistent recursive monitoring for selected directories and their newly created folders.
-- Added system-tray controls, pause/resume monitoring, explicit exit, and background startup after Windows sign-in.
-- Improved merging, backup, and exact restoration of pre-existing `Desktop.ini` files.
+- Added ICO support to image-icon imports, automatically selecting the largest layer from multi-size ICO files.
+- Retains Beta 6 restyling, persistent recursive monitoring, system-tray controls, and background startup.
 
-See the [v0.1.0-beta.6 release notes](docs/releases/v0.1.0-beta.6.md) for the complete summary.
+See the [v0.1.0-beta.7 release notes](docs/releases/v0.1.0-beta.7.md) for the complete summary.
 
 ### Installation
 
-1. Download `FolderThemeStudio-v0.1.0-beta.6-setup.exe` and its matching `.sha256` file from the project Release.
+1. Download `FolderThemeStudio-v0.1.0-beta.7-setup.exe` and its matching `.sha256` file from the project Release.
 2. Verify the installer SHA-256.
 3. Run the installer. If the x64 `.NET 8 Desktop Runtime` is missing, the installer downloads and installs it over the network.
 
@@ -152,7 +137,7 @@ See the [v0.1.0-beta.6 release notes](docs/releases/v0.1.0-beta.6.md) for the co
 
 ### Quick start
 
-1. Choose a built-in folder style under Icon source, or import a PNG, JPG, JPEG, or BMP image.
+1. Choose a built-in folder style under Icon source, or import a PNG, JPG, JPEG, BMP, or ICO image.
 2. Tune the colors and inspect the live 16, 32, 64, and 256 px previews.
 3. Choose Global mode, or add one or more explicit roots in Compatible mode.
 4. Select Calculate plan, review allowed, skipped, and failed items, and then apply.
@@ -178,8 +163,7 @@ See the [v0.1.0-beta.6 release notes](docs/releases/v0.1.0-beta.6.md) for the co
 
 - [中文使用教程](docs/USER-GUIDE.zh-CN.md)
 - [English User Guide](docs/USER-GUIDE.en-US.md)
-- [Beta 6 release notes](docs/releases/v0.1.0-beta.6.md)
-- [Bilingual project announcement](docs/PROMOTION.zh-en.md)
+- [Beta 7 release notes](docs/releases/v0.1.0-beta.7.md)
 - [Manual test checklist](docs/manual-test-checklist.md)
 - [Security policy](SECURITY.md)
 - [Contributing guide](CONTRIBUTING.md)
@@ -192,7 +176,7 @@ Development requires Windows x64 and the .NET 8 SDK. Inno Setup 6 is also requir
 dotnet restore FolderThemeStudio.sln
 dotnet test FolderThemeStudio.sln -c Release
 dotnet build src\FolderThemeStudio.App\FolderThemeStudio.App.csproj -c Release
-powershell -NoProfile -ExecutionPolicy Bypass -File .\build\Package-Release.ps1 -Version v0.1.0-beta.6 -InnoCompilerPath "$env:LOCALAPPDATA\Programs\Inno Setup 6\ISCC.exe"
+powershell -NoProfile -ExecutionPolicy Bypass -File .\build\Package-Release.ps1 -Version v0.1.0-beta.7 -InnoCompilerPath "$env:LOCALAPPDATA\Programs\Inno Setup 6\ISCC.exe"
 ```
 
 Reproducible bug reports are welcome through Issues. Read the [contributing guide](CONTRIBUTING.md) before proposing interface, documentation, compatibility, or test improvements. For sensitive reports, follow the [security policy](SECURITY.md).
