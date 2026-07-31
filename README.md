@@ -18,7 +18,7 @@
 ---
 
 ## 简体中文
-推荐配套项目：https://github.com/icon11-community/Folder-Icoc
+
 Folder Theme Studio 是一款面向 Windows 10/11 x64 的开源文件夹图标定制工具。它只处理普通文件夹图标，不替换文件资源管理器、不修改文件类型图标，也不会把系统特殊文件夹当作普通目录处理。
 
 你可以通过可视化调色板设计内置文件夹样式，也可以导入自己的图片作为完整图标。应用前，软件会先计算方案并展示允许与跳过的项目；应用后可通过备份恢复。对于需要长期统一风格的目录，还能启用递归监控，让之后新建的文件夹自动继承所选样式。
@@ -27,6 +27,7 @@ Folder Theme Studio 是一款面向 Windows 10/11 x64 的开源文件夹图标�
 
 - **二维可视化调色板**：直接选择色相、饱和度和亮度，并分别调整渐变起始色、渐变结束色、描边和发光颜色。
 - **图片图标导入**：支持 PNG、JPG、JPEG、BMP、ICO；自动保持比例、居中并补充透明边距。
+- **无需保存即可使用**：刚完成的样式编辑或刚导入的图片会立即成为当前图标，保存个人主题仅用于以后复用。
 - **多尺寸实时预览**：同步检查 16、32、64、256 px 效果。
 - **两种应用模式**：全局模式统一普通文件夹映射；兼容模式只处理明确选择的目录。
 - **已有样式可再次修改**：仅合并 `Desktop.ini` 中的图标字段，保留其他设置、注释、编码和换行格式。
@@ -34,6 +35,7 @@ Folder Theme Studio 是一款面向 Windows 10/11 x64 的开源文件夹图标�
 - **备份与恢复**：应用前记录原有配置；符合恢复条件时精确还原原始 `Desktop.ini` 内容和属性。
 - **后台运行**：关闭主窗口默认收起到系统托盘；支持登录 Windows 后自动在后台启动并恢复监控。
 - **中英双语界面**：简体中文与 English 可在设置中切换。
+- **原生圆角窗口**：主窗口、设置和教程在受支持的 Windows 版本上使用原生圆角，同时保留系统标题栏与窗口操作。
 
 ### Beta 7 更新
 
@@ -54,6 +56,7 @@ Folder Theme Studio 是一款面向 Windows 10/11 x64 的开源文件夹图标�
 
 1. 在“图标来源”中选择内置文件夹样式，或导入 PNG、JPG、JPEG、BMP、ICO 图片。
 2. 调整颜色并检查 16、32、64、256 px 实时预览。
+   当前编辑或刚导入的图标无需保存个人主题即可继续使用。
 3. 选择全局模式，或在兼容模式中添加一个或多个明确根目录。
 4. 点击“计算方案”，检查允许、跳过和失败项目后再应用。
 5. 如需让新文件夹继续继承样式，启用递归监控；需要撤销时使用“恢复最近备份”。
@@ -112,6 +115,7 @@ You can build a folder style with a visual color palette or import an image as t
 
 - **Two-dimensional visual color palette**: pick hue, saturation, and brightness directly, then tune gradient start, gradient end, stroke, and glow independently.
 - **Image icon import**: supports PNG, JPG, JPEG, BMP, and ICO, preserving aspect ratio while centering the image on transparent padding.
+- **No save required for current use**: new style edits and imported images become the current icon immediately; saving a personal theme is only for later reuse.
 - **Live multi-size preview**: inspect the result at 16, 32, 64, and 256 px.
 - **Two application modes**: Global mode updates the ordinary-folder mapping; Compatible mode stays within explicitly selected roots.
 - **Restyle existing custom folders**: only icon-related fields in `Desktop.ini` are merged, while unrelated settings, comments, encoding, and line endings are retained.
@@ -119,6 +123,7 @@ You can build a folder style with a visual color palette or import an image as t
 - **Backup and restore**: capture pre-existing configuration before applying and restore the original `Desktop.ini` bytes and attributes when recovery conditions are met.
 - **Background operation**: closing the main window minimizes to the system tray by default; monitoring can resume automatically in the background after Windows sign-in.
 - **Bilingual interface**: switch between Simplified Chinese and English in Settings.
+- **Native rounded windows**: Main, Settings, and Tutorial use native rounded corners on supported Windows versions while retaining standard system window controls.
 
 ### What is new in Beta 7
 
@@ -139,6 +144,7 @@ See the [v0.1.0-beta.7 release notes](docs/releases/v0.1.0-beta.7.md) for the co
 
 1. Choose a built-in folder style under Icon source, or import a PNG, JPG, JPEG, BMP, or ICO image.
 2. Tune the colors and inspect the live 16, 32, 64, and 256 px previews.
+   Current edits and newly imported icons can be used without saving a personal theme.
 3. Choose Global mode, or add one or more explicit roots in Compatible mode.
 4. Select Calculate plan, review allowed, skipped, and failed items, and then apply.
 5. Enable recursive monitoring if future folders should inherit the style; use Restore latest backup when you need to undo the last application.
