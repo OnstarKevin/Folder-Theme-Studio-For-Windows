@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using FolderThemeStudio.App.Services;
 
 namespace FolderThemeStudio.App.Settings;
 
@@ -14,8 +15,10 @@ public sealed record AppSettings(
     IReadOnlyList<string> RecentColors,
     bool StartWithWindows = true,
     bool CloseToTray = true,
-    bool MonitoringPaused = false)
+    bool MonitoringPaused = false,
+    double CardOpacity = 1)
 {
+    public FolderEditChord EditChord { get; init; } = FolderEditChord.Default;
     private static readonly Regex HexColor = new("^#[0-9A-Fa-f]{6}$", RegexOptions.CultureInvariant);
 
     public static AppSettings Default { get; } = new("zh-CN", false, FolderPalette.Default, Array.Empty<string>());
@@ -23,7 +26,9 @@ public sealed record AppSettings(
     public static bool TryNormalize(AppSettings? value, out AppSettings normalized)
     {
         normalized = Default;
-        if (value is null || value.Language is not ("zh-CN" or "en-US") || value.Palette is null)
+        if (value is null || value.Language is not ("zh-CN" or "en-US") || value.Palette is null ||
+            !double.IsFinite(value.CardOpacity) || value.CardOpacity is < 0 or > 1 ||
+            !FolderEditChord.TryNormalize(value.EditChord, out var normalizedChord))
         {
             return false;
         }
@@ -57,7 +62,8 @@ public sealed record AppSettings(
             recent,
             value.StartWithWindows,
             value.CloseToTray,
-            value.MonitoringPaused);
+            value.MonitoringPaused,
+            value.CardOpacity) { EditChord = normalizedChord };
         return true;
     }
 }

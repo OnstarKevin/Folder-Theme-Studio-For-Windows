@@ -5,7 +5,9 @@ namespace FolderThemeStudio.App.Monitoring;
 
 public sealed class JsonMonitoringRuleStore : IMonitoringRuleStore
 {
-    private const int SchemaVersion = 1;
+    private const int SchemaVersion = 2;
+    private const int LegacySchemaVersion = 1;
+    private const int MonitoringRuleSchemaVersion = 1;
     private static readonly JsonSerializerOptions Options = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -83,7 +85,8 @@ public sealed class JsonMonitoringRuleStore : IMonitoringRuleStore
             var paused = root.TryGetProperty("paused", out var pausedElement) && pausedElement.ValueKind == JsonValueKind.True;
             var rules = new List<MonitoringRule>();
             var diagnostics = new List<string>();
-            if (!root.TryGetProperty("schemaVersion", out var version) || version.GetInt32() != SchemaVersion)
+            if (!root.TryGetProperty("schemaVersion", out var version) ||
+                version.GetInt32() is not (LegacySchemaVersion or SchemaVersion))
                 return new([], paused, ["Unsupported monitoring rule document version."]);
             if (!root.TryGetProperty("rules", out var entries) || entries.ValueKind != JsonValueKind.Array)
                 return new([], paused, ["Monitoring rule list is missing."]);
@@ -130,7 +133,7 @@ public sealed class JsonMonitoringRuleStore : IMonitoringRuleStore
 
     private static MonitoringRule Normalize(MonitoringRule rule)
     {
-        if (rule.SchemaVersion != SchemaVersion) throw new InvalidDataException("Unsupported monitoring rule version.");
+        if (rule.SchemaVersion != MonitoringRuleSchemaVersion) throw new InvalidDataException("Unsupported monitoring rule version.");
         if (string.IsNullOrWhiteSpace(rule.RootPath) || string.IsNullOrWhiteSpace(rule.IcoPath))
             throw new InvalidDataException("Monitoring paths are required.");
         if (rule.UpdatedAtUtc == default) throw new InvalidDataException("Monitoring update time is required.");
@@ -138,7 +141,26 @@ public sealed class JsonMonitoringRuleStore : IMonitoringRuleStore
         {
             RootPath = Path.TrimEndingDirectorySeparator(Path.GetFullPath(rule.RootPath)),
             IcoPath = Path.GetFullPath(rule.IcoPath),
-            UpdatedAtUtc = rule.UpdatedAtUtc.ToUniversalTime()
+            UpdatedAtUtc = rule.UpdatedAtUtc.ToUniversalTime(),
+            NameRules = rule.NameRules.Select(Normalize)
+                .OrderBy(item => item.Order)
+                .ThenBy(item => item.Id, StringComparer.OrdinalIgnoreCase)
+                .ToArray()
+        };
+    }
+
+    private static FolderNameStyleRule Normalize(FolderNameStyleRule rule)
+    {
+        ArgumentNullException.ThrowIfNull(rule);
+        if (string.IsNullOrWhiteSpace(rule.Id) || string.IsNullOrWhiteSpace(rule.Keyword) || string.IsNullOrWhiteSpace(rule.IcoPath))
+            throw new InvalidDataException("Name style rule ID, keyword, and ICO path are required.");
+        if (rule.Order < 0)
+            throw new InvalidDataException("Name style rule order cannot be negative.");
+        return rule with
+        {
+            Id = rule.Id.Trim(),
+            Keyword = rule.Keyword.Trim(),
+            IcoPath = Path.GetFullPath(rule.IcoPath)
         };
     }
 

@@ -12,7 +12,7 @@ public static class ImportedIconRenderer
         ArgumentException.ThrowIfNullOrWhiteSpace(normalizedPngPath);
         if (size <= 0) throw new ArgumentOutOfRangeException(nameof(size));
 
-        var source = Load(normalizedPngPath);
+        var source = Load(normalizedPngPath, size);
         var scale = Math.Min(size / (double)source.PixelWidth, size / (double)source.PixelHeight);
         var width = source.PixelWidth * scale;
         var height = source.PixelHeight * scale;
@@ -33,11 +33,19 @@ public static class ImportedIconRenderer
         return target;
     }
 
-    private static BitmapSource Load(string path)
+    private static BitmapSource Load(string path, int targetSize)
     {
         using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read | FileShare.Delete);
         var decoder = BitmapDecoder.Create(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
-        var source = decoder.Frames[0];
+        var source = decoder.Frames
+            .Where(frame => frame.PixelWidth >= targetSize && frame.PixelHeight >= targetSize)
+            .OrderBy(frame => checked((long)frame.PixelWidth * frame.PixelHeight))
+            .ThenByDescending(frame => frame.Format.BitsPerPixel)
+            .FirstOrDefault()
+            ?? decoder.Frames
+                .OrderByDescending(frame => checked((long)frame.PixelWidth * frame.PixelHeight))
+                .ThenByDescending(frame => frame.Format.BitsPerPixel)
+                .First();
         source.Freeze();
         return source;
     }

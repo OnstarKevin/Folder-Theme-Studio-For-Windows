@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
 using FolderThemeStudio.App.Localization;
 using FolderThemeStudio.App.Settings;
+using FolderThemeStudio.App.Services;
 using FolderThemeStudio.Core.Themes;
 
 namespace FolderThemeStudio.App.ViewModels;
@@ -22,6 +23,8 @@ public sealed class SettingsViewModel : INotifyPropertyChanged
     private BitmapSource? previewImage;
     private bool startWithWindows;
     private bool closeToTray;
+    private double cardOpacityPercent;
+    private FolderEditChord editChord;
 
     public SettingsViewModel(
         AppSettings initial,
@@ -38,6 +41,8 @@ public sealed class SettingsViewModel : INotifyPropertyChanged
         selectedLanguage = initial.Language;
         startWithWindows = initial.StartWithWindows;
         closeToTray = initial.CloseToTray;
+        cardOpacityPercent = initial.CardOpacity * 100;
+        editChord = initial.EditChord;
         GradientStart = new ColorPickerViewModel(initial.Palette.GradientStart);
         GradientEnd = new ColorPickerViewModel(initial.Palette.GradientEnd);
         Stroke = new ColorPickerViewModel(initial.Palette.Stroke);
@@ -105,6 +110,24 @@ public sealed class SettingsViewModel : INotifyPropertyChanged
         set => SetField(ref closeToTray, value);
     }
 
+    public double CardOpacityPercent
+    {
+        get => cardOpacityPercent;
+        set => SetField(ref cardOpacityPercent, Math.Clamp(value, 0, 100));
+    }
+
+    public FolderEditChord EditChord
+    {
+        get => editChord;
+        set
+        {
+            if (!FolderEditChord.TryNormalize(value, out var normalized)) return;
+            if (SetField(ref editChord, normalized)) OnPropertyChanged(nameof(EditChordDisplay));
+        }
+    }
+
+    public string EditChordDisplay => EditChord.ToString();
+
     public async Task<bool> SaveAsync()
     {
         if (!CanSave) return false;
@@ -121,7 +144,8 @@ public sealed class SettingsViewModel : INotifyPropertyChanged
             recent,
             StartWithWindows,
             CloseToTray,
-            initial.MonitoringPaused);
+            initial.MonitoringPaused,
+            CardOpacityPercent / 100) { EditChord = EditChord };
         await store.SaveAsync(settings);
         localization.ApplyLanguage(SelectedLanguage);
         applyPalette(palette);

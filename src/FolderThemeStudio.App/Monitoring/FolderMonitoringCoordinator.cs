@@ -14,6 +14,7 @@ public interface IFolderMonitoringCoordinator : IDisposable
     Task PauseAsync(CancellationToken token = default);
     Task ResumeAsync(CancellationToken token = default);
     Task ReplaceRuleAsync(MonitoringRule rule, CancellationToken token = default);
+    Task ReplaceFallbackIconAsync(string rootPath, string icoPath, CancellationToken token = default);
     Task RemoveRuleAsync(string rootPath, CancellationToken token = default);
 }
 
@@ -78,6 +79,23 @@ public sealed class FolderMonitoringCoordinator : IFolderMonitoringCoordinator
         RebuildWatchers();
     }
 
+    public async Task ReplaceFallbackIconAsync(string rootPath, string icoPath, CancellationToken token = default)
+    {
+        var canonical = Path.TrimEndingDirectorySeparator(Path.GetFullPath(rootPath));
+        MonitoringRule? current = rules.GetValueOrDefault(canonical);
+        if (current is null)
+        {
+            var loaded = await store.LoadAsync(token).ConfigureAwait(false);
+            current = loaded.Rules.FirstOrDefault(item =>
+                string.Equals(Path.TrimEndingDirectorySeparator(Path.GetFullPath(item.RootPath)), canonical, StringComparison.OrdinalIgnoreCase));
+        }
+
+        var replacement = current is null
+            ? new MonitoringRule(1, canonical, icoPath, DateTimeOffset.UtcNow)
+            : current with { IcoPath = icoPath, UpdatedAtUtc = DateTimeOffset.UtcNow };
+        await ReplaceRuleAsync(replacement, token).ConfigureAwait(false);
+    }
+
     public async Task RemoveRuleAsync(string rootPath, CancellationToken token = default)
     {
         var canonical = Path.TrimEndingDirectorySeparator(Path.GetFullPath(rootPath));
@@ -119,27 +137,39 @@ public sealed class FolderMonitoringCoordinator : IFolderMonitoringCoordinator
         lock (sync)
         {
             if (!pending.Add(canonical)) return;
-            var task = ProcessAsync(canonical, rule);
+            var task = ProcessAsync(canonical, rule, e.WasRenamed);
             work.Add(task);
         }
     }
 
-    private async Task ProcessAsync(string path, MonitoringRule rule)
+    private async Task ProcessAsync(string path, MonitoringRule rule, bool wasRenamed)
     {
         try
         {
             await Task.Yield();
+            var icoPath = wasRenamed ? rule.IcoPath : ResolveIcoPath(path, rule);
             MonitoredApplyOutcome? outcome = null;
             for (var attempt = 0; attempt < RetryDelays.Length; attempt++)
             {
                 await delay(RetryDelays[attempt], CancellationToken.None).ConfigureAwait(false);
-                outcome = await applier.ApplyAsync(path, rule.IcoPath, CancellationToken.None).ConfigureAwait(false);
+                outcome = await applier.ApplyAsync(path, icoPath, CancellationToken.None).ConfigureAwait(false);
                 if (outcome.Success) break;
             }
             outcome ??= MonitoredApplyOutcome.Failure(path, "Monitoring did not run.");
             OutcomeProduced?.Invoke(this, new(outcome.Success, outcome.Path, outcome.Error));
         }
         finally { lock (sync) pending.Remove(path); }
+    }
+
+    private static string ResolveIcoPath(string folderPath, MonitoringRule rule)
+    {
+        var leaf = Path.GetFileName(Path.TrimEndingDirectorySeparator(Path.GetFullPath(folderPath)));
+        return rule.NameRules
+            .Where(item => item.Enabled)
+            .OrderBy(item => item.Order)
+            .ThenBy(item => item.Id, StringComparer.OrdinalIgnoreCase)
+            .FirstOrDefault(item => leaf.Contains(item.Keyword, StringComparison.OrdinalIgnoreCase))?.IcoPath
+            ?? rule.IcoPath;
     }
 
     private void ClearWatchers()

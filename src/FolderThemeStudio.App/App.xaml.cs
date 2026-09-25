@@ -14,6 +14,7 @@ public partial class App : System.Windows.Application
 {
     private TrayIconService? trayIcon;
     private MainWindow? mainWindow;
+    private FolderQuickEditMouseHook? quickEditHook;
 
     private async void OnStartup(object sender, StartupEventArgs e)
     {
@@ -22,9 +23,19 @@ public partial class App : System.Windows.Application
         var localization = new LocalizationService(settings.Language);
         var dialogs = new DialogService(() => MainWindow);
         var monitoringStore = new JsonMonitoringRuleStore();
+        var folderCategoryCatalog = new JsonFolderCategoryCatalog();
         var folderMonitoring = new FolderMonitoringCoordinator(
             monitoringStore,
             new MonitoredFolderIconService());
+        var monitoringAssets = new MonitoringIconAssetService();
+        var categoryPopup = new FolderCategoryPopupWindow();
+        categoryPopup.SetCardOpacity(settings.CardOpacity);
+        var folderHoverMonitor = new FolderHoverMonitor(
+            folderCategoryCatalog,
+            new ExplorerFolderHoverTargetResolver(),
+            new WindowsCursorPositionSource(),
+            categoryPopup,
+            new WpfViewModelDispatcher());
         var viewModel = new MainViewModel(
             new ThemeApplicationCoordinator(new ThemeApplicationService()),
             dialogs,
@@ -33,7 +44,7 @@ public partial class App : System.Windows.Application
             new TaskPreviewDelay(),
             new WpfViewModelDispatcher(),
             folderMonitoring: folderMonitoring,
-            monitoringAssets: new MonitoringIconAssetService());
+            monitoringAssets: monitoringAssets);
         viewModel.ApplyPalette(settings.Palette);
         var startupRegistration = new StartupRegistrationService();
         try { startupRegistration.SetEnabled(settings.StartWithWindows); }
@@ -48,13 +59,32 @@ public partial class App : System.Windows.Application
             localization,
             settings,
             startupRegistration,
-            () => trayIcon.ShowBackgroundNotice());
+            () => trayIcon.ShowBackgroundNotice(),
+            monitoringStore,
+            folderMonitoring,
+            monitoringAssets,
+            dialogs,
+            folderCategoryCatalog,
+            folderHoverMonitor,
+            categoryPopup.SetCardOpacity,
+            chord => quickEditHook?.UpdateChord(chord));
         mainWindow = window;
         MainWindow = window;
+        try
+        {
+            quickEditHook = new FolderQuickEditMouseHook(folderHoverMonitor,
+                path => _ = window.OpenFolderCategoryEditorAsync(path), settings.EditChord, Dispatcher);
+        }
+        catch (System.ComponentModel.Win32Exception)
+        {
+            // Folder styling remains available if Windows denies the global mouse hook.
+        }
+        window.Closed += (_, _) => quickEditHook?.Dispose();
         trayIcon.OpenRequested += (_, _) => window.Dispatcher.Invoke(window.ShowFromTray);
         trayIcon.ToggleMonitoringRequested += async (_, _) => await viewModel.ToggleMonitoringAsync();
         trayIcon.ExitRequested += (_, _) => window.Dispatcher.Invoke(ExitApplication);
         await viewModel.InitializeAsync();
+        await window.StartBackgroundServicesAsync();
         var background = e.Args.Any(argument => string.Equals(argument, "--background", StringComparison.OrdinalIgnoreCase));
         if (!background)
         {
@@ -65,6 +95,7 @@ public partial class App : System.Windows.Application
 
     private void ExitApplication()
     {
+        quickEditHook?.Dispose();
         trayIcon?.Dispose();
         trayIcon = null;
         mainWindow?.RequestExplicitExit();

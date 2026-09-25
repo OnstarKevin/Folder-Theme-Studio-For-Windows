@@ -1,0 +1,107 @@
+<controls:RoundedWindow x:Class="FolderThemeStudio.App.FolderCategoriesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:FolderThemeStudio.App.Controls"
+        Title="{DynamicResource FolderCategories.Window.Title}"
+        Width="960" Height="680" MinWidth="740" MinHeight="560"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
+        Icon="Assets/FolderThemeStudio.png" UseLayoutRounding="True">
+    <Grid Margin="22">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="0,0,0,16">
+            <TextBlock FontSize="25" FontWeight="SemiBold" Text="{DynamicResource FolderCategories.Window.Title}" />
+            <TextBlock Margin="0,4,0,0" Foreground="{StaticResource MutedTextBrush}"
+                       Text="{DynamicResource FolderCategories.Window.Subtitle}" />
+        </StackPanel>
+
+        <Grid Grid.Row="1" IsEnabled="{Binding CanEdit}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.9*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="1.1*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Style="{StaticResource CardStyle}" Padding="16">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top">
+                        <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{DynamicResource FolderCategories.List.Title}" />
+                        <WrapPanel>
+                            <Button Command="{Binding PickFolderCommand}" Content="{DynamicResource FolderCategories.Action.AddFolder}" />
+                            <Button Command="{Binding NewEntryCommand}" Content="{DynamicResource FolderCategories.Action.New}" />
+                        </WrapPanel>
+                    </StackPanel>
+                    <TextBlock DockPanel.Dock="Bottom" Margin="2,8,2,0" Foreground="{StaticResource MutedTextBrush}"
+                               TextWrapping="Wrap" Text="{DynamicResource FolderCategories.List.EmptyHint}"
+                               Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVisibility}}" />
+                    <ListBox ItemsSource="{Binding Entries}" SelectedItem="{Binding SelectedEntry, Mode=TwoWay}"
+                             BorderThickness="0" Background="Transparent">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="0,0,0,8" Padding="12" Background="#F7F9FC"
+                                        BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="11">
+                                    <StackPanel>
+                                        <TextBlock FontWeight="SemiBold" Text="{Binding Category}" TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Margin="0,4,0,0" FontSize="11" Foreground="{StaticResource MutedTextBrush}"
+                                                   Text="{Binding FolderPath}" TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Margin="0,4,0,0" FontSize="12" Foreground="{StaticResource MutedTextBrush}"
+                                                   Text="{Binding Note}" TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Column="2" Style="{StaticResource CardStyle}" Padding="20">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{DynamicResource FolderCategories.Form.Title}" />
+                        <TextBlock Foreground="{StaticResource MutedTextBrush}" TextWrapping="Wrap"
+                                   Text="{Binding FolderPathDisplay}" />
+                        <Button Margin="0,10,0,0" HorizontalAlignment="Left" Command="{Binding PickFolderCommand}"
+                                Content="{DynamicResource FolderCategories.Action.ChooseFolder}" />
+
+                        <Label Style="{StaticResource FieldLabelStyle}" Content="{DynamicResource FolderCategories.Form.Category}" />
+                        <TextBox Text="{Binding Category, UpdateSourceTrigger=PropertyChanged}" MaxLength="32" />
+
+                        <Label Style="{StaticResource FieldLabelStyle}" Content="{DynamicResource FolderCategories.Form.Note}" />
+                        <TextBox Height="112" Padding="10" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                                 VerticalContentAlignment="Top" MaxLength="140"
+                                 Text="{Binding Note, UpdateSourceTrigger=PropertyChanged}" />
+
+                        <TextBlock Margin="0,14,0,6" FontWeight="SemiBold" Text="{DynamicResource FolderCategories.Form.Color}" />
+                        <Border Height="32" CornerRadius="8" Background="{Binding AccentPreview}"
+                                BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" />
+                        <TextBlock Margin="0,12,0,6" Text="{DynamicResource FolderCategories.Form.GradientStart}" />
+                        <controls:VisualColorPicker DataContext="{Binding GradientStartPicker}" />
+                        <TextBlock Margin="0,16,0,6" Text="{DynamicResource FolderCategories.Form.GradientEnd}" />
+                        <controls:VisualColorPicker DataContext="{Binding GradientEndPicker}" />
+
+                        <WrapPanel Margin="0,18,0,0">
+                            <Button Command="{Binding SaveCommand}" Style="{StaticResource PrimaryButtonStyle}"
+                                    Content="{DynamicResource FolderCategories.Action.Save}" />
+                            <Button Command="{Binding RemoveCommand}" Content="{DynamicResource FolderCategories.Action.Remove}" />
+                        </WrapPanel>
+                        <TextBlock Margin="0,8,0,0" Foreground="{StaticResource MutedTextBrush}" TextWrapping="Wrap"
+                                   Text="{Binding StatusText}" />
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+        <Border Grid.Row="2" Margin="0,14,0,0" Padding="14" CornerRadius="12"
+                Background="#EAF1FB" BorderBrush="#D7E4F5" BorderThickness="1">
+            <DockPanel>
+                <Button DockPanel.Dock="Right" Content="{DynamicResource FolderCategories.Action.Close}" IsCancel="True" Click="Close_Click" />
+                <TextBlock VerticalAlignment="Center" Foreground="{StaticResource MutedTextBrush}" TextWrapping="Wrap"
+                           Text="{DynamicResource FolderCategories.Help}" />
+            </DockPanel>
+        </Border>
+    </Grid>
+</controls:RoundedWindow>

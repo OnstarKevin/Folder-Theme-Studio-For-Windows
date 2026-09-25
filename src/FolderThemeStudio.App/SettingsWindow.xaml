@@ -28,6 +28,13 @@
                                   Content="登录 Windows 后自动在后台启动并恢复监控" />
                         <CheckBox Margin="0,4,0,8" IsChecked="{Binding CloseToTray}"
                                   Content="关闭主窗口时收起到后台" />
+                        <TextBlock Margin="0,20,0,6" Text="{DynamicResource Settings.CardOpacity}" />
+                        <Slider Minimum="0" Maximum="100" Value="{Binding CardOpacityPercent}" TickFrequency="1" />
+                        <TextBlock Text="{Binding CardOpacityPercent, StringFormat={}{0:F0}%}" />
+                        <TextBlock Margin="0,18,0,6" Text="{DynamicResource Settings.QuickEditChord}" />
+                        <Button Content="{Binding EditChordDisplay}" PreviewMouseDown="EditChord_PreviewMouseDown"
+                                HorizontalAlignment="Left" />
+                        <TextBlock Foreground="{StaticResource MutedTextBrush}" Text="{DynamicResource Settings.QuickEditHint}" />
                     </StackPanel>
                 </Border>
             </TabItem>

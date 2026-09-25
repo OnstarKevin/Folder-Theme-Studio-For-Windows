@@ -786,7 +786,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IDisposable
             {
                 var durableIco = await monitoringAssets.PersistAsync(result.IconArtifactPath, token);
                 foreach (var root in request.ExplicitRoots ?? [])
-                    await folderMonitoring.ReplaceRuleAsync(new MonitoringRule(1, root, durableIco, DateTimeOffset.UtcNow), token);
+                    await folderMonitoring.ReplaceFallbackIconAsync(root, durableIco, token);
                 RaiseMonitoringState();
             }
             ShowApplyResult(result);

@@ -18,7 +18,8 @@
         Icon="Assets/FolderThemeStudio.png"
         SizeChanged="Window_SizeChanged"
         automation:AutomationProperties.Name="{DynamicResource App.AutomationName}">
-    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+    <ScrollViewer x:Name="MainScrollViewer" PreviewMouseWheel="MainScroll_PreviewMouseWheel"
+                  HorizontalScrollBarVisibility="Disabled"
                   VerticalScrollBarVisibility="Auto"
                   Focusable="False">
         <Grid Margin="24">
@@ -27,11 +28,15 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Margin="0,0,0,20">
+            <Grid x:Name="HeaderGrid" Grid.Row="0" Margin="0,0,0,20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="0" />
+                </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal">
                     <Image Width="50" Height="50" Margin="0,0,12,0" Source="Assets/FolderThemeStudio.png" />
                     <StackPanel VerticalAlignment="Center">
@@ -39,12 +44,16 @@
                         <TextBlock Margin="0,2,0,0" Foreground="{StaticResource MutedTextBrush}" Text="{DynamicResource App.TitleEnglish}" />
                     </StackPanel>
                 </StackPanel>
-                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <WrapPanel x:Name="TopActionsPanel" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="AutoStyleRulesButton" Content="{DynamicResource Top.AutoStyleRules}" Click="AutoStyleRules_Click"
+                            automation:AutomationProperties.Name="{DynamicResource Top.AutoStyleRulesAutomation}" />
+                    <Button x:Name="FolderCategoriesButton" Content="{DynamicResource Top.FolderCategories}" Click="FolderCategories_Click"
+                            automation:AutomationProperties.Name="{DynamicResource Top.FolderCategoriesAutomation}" />
                     <Button x:Name="TutorialButton" Content="{DynamicResource Top.Tutorial}" Click="Tutorial_Click"
                             automation:AutomationProperties.Name="{DynamicResource Top.TutorialAutomation}" />
                     <Button x:Name="SettingsButton" Content="{DynamicResource Top.Settings}" Click="Settings_Click"
                             automation:AutomationProperties.Name="{DynamicResource Top.SettingsAutomation}" />
-                </StackPanel>
+                </WrapPanel>
             </Grid>
 
             <Grid x:Name="AdaptiveGrid" Grid.Row="1">

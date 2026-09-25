@@ -2,7 +2,7 @@ using System.IO;
 
 namespace FolderThemeStudio.App.Monitoring;
 
-public sealed record DirectoryCreatedEventArgs(string Path);
+public sealed record DirectoryCreatedEventArgs(string Path, bool WasRenamed = false);
 
 public interface IDirectoryWatcher : IDisposable
 {
@@ -41,7 +41,7 @@ internal sealed class DirectoryWatcher : IDirectoryWatcher
     public bool IncludeSubdirectories => watcher.IncludeSubdirectories;
     public event EventHandler<DirectoryCreatedEventArgs>? DirectoryCreated;
     private void Created(object sender, FileSystemEventArgs e) { if (Directory.Exists(e.FullPath)) DirectoryCreated?.Invoke(this, new(e.FullPath)); }
-    private void Renamed(object sender, RenamedEventArgs e) { if (Directory.Exists(e.FullPath)) DirectoryCreated?.Invoke(this, new(e.FullPath)); }
+    private void Renamed(object sender, RenamedEventArgs e) { if (Directory.Exists(e.FullPath)) DirectoryCreated?.Invoke(this, new(e.FullPath, WasRenamed: true)); }
     public void Dispose()
     {
         watcher.EnableRaisingEvents = false;

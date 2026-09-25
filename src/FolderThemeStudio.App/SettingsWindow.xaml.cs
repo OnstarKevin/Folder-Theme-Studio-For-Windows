@@ -2,6 +2,8 @@ using System.Windows;
 using FolderThemeStudio.App.Controls;
 using FolderThemeStudio.App.Settings;
 using FolderThemeStudio.App.ViewModels;
+using FolderThemeStudio.App.Services;
+using System.Windows.Input;
 
 namespace FolderThemeStudio.App;
 
@@ -40,5 +42,19 @@ public partial class SettingsWindow : RoundedWindow
     {
         if ((sender as FrameworkElement)?.DataContext is string color)
             viewModel.ApplyRecent(color);
+    }
+
+    private void EditChord_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+    {
+        var button = e.ChangedButton switch
+        {
+            MouseButton.Right => FolderMouseButton.Right,
+            MouseButton.Middle => FolderMouseButton.Middle,
+            _ => (FolderMouseButton?)null,
+        };
+        if (button is null) return;
+        var chord = new FolderEditChord(Keyboard.Modifiers, button.Value);
+        if (FolderEditChord.TryNormalize(chord, out var normalized)) viewModel.EditChord = normalized;
+        e.Handled = true;
     }
 }

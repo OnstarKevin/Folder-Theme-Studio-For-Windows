@@ -6,7 +6,17 @@ public sealed record MonitoringRule(
     int SchemaVersion,
     string RootPath,
     string IcoPath,
-    DateTimeOffset UpdatedAtUtc);
+    DateTimeOffset UpdatedAtUtc)
+{
+    public IReadOnlyList<FolderNameStyleRule> NameRules { get; init; } = [];
+}
+
+public sealed record FolderNameStyleRule(
+    string Id,
+    string Keyword,
+    string IcoPath,
+    bool Enabled,
+    int Order);
 
 public sealed record MonitoringRuleLoadResult(
     IReadOnlyList<MonitoringRule> Rules,
@@ -34,6 +44,7 @@ public sealed class NullFolderMonitoringCoordinator : IFolderMonitoringCoordinat
     public Task PauseAsync(CancellationToken token = default) => Task.CompletedTask;
     public Task ResumeAsync(CancellationToken token = default) => Task.CompletedTask;
     public Task ReplaceRuleAsync(MonitoringRule rule, CancellationToken token = default) => Task.CompletedTask;
+    public Task ReplaceFallbackIconAsync(string rootPath, string icoPath, CancellationToken token = default) => Task.CompletedTask;
     public Task RemoveRuleAsync(string rootPath, CancellationToken token = default) => Task.CompletedTask;
     public void Dispose() { }
 }

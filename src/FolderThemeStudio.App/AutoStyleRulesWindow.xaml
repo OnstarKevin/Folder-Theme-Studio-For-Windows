@@ -1,0 +1,186 @@
+<controls:RoundedWindow x:Class="FolderThemeStudio.App.AutoStyleRulesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:FolderThemeStudio.App.Controls"
+        mc:Ignorable="d"
+        Title="{DynamicResource AutoRules.Window.Title}"
+        Width="1080"
+        Height="760"
+        MinWidth="780"
+        MinHeight="600"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        UseLayoutRounding="True">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="0,0,0,18">
+            <StackPanel>
+                <TextBlock FontSize="25" FontWeight="SemiBold" Text="{DynamicResource AutoRules.Window.Title}" />
+                <TextBlock Margin="0,4,0,0" Foreground="{StaticResource MutedTextBrush}"
+                           Text="{DynamicResource AutoRules.Window.Subtitle}" />
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="1" IsEnabled="{Binding CanEdit}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.08*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="0.92*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Style="{StaticResource CardStyle}" Padding="18">
+                <DockPanel LastChildFill="True">
+                    <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
+                        <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{DynamicResource AutoRules.Root.Label}" />
+                        <ComboBox ItemsSource="{Binding RootPaths}"
+                                  SelectedItem="{Binding SelectedRootPath, UpdateSourceTrigger=PropertyChanged}"
+                                  ToolTip="{DynamicResource AutoRules.Root.Label}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" TextTrimming="CharacterEllipsis" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <TextBlock x:Name="AutoRulesFallback" Margin="2,6,0,0" FontSize="11"
+                                   Foreground="{StaticResource MutedTextBrush}" TextTrimming="CharacterEllipsis">
+                            <Run Text="{DynamicResource AutoRules.Fallback}" />
+                            <Run Text="{Binding FallbackIconName, Mode=OneWay}" />
+                        </TextBlock>
+                        <Grid Margin="0,20,0,8">
+                            <TextBlock FontSize="17" FontWeight="SemiBold" Text="{DynamicResource AutoRules.List.Title}" />
+                            <Button HorizontalAlignment="Right" Padding="10,4" MinHeight="30"
+                                    Command="{Binding AddNewRuleCommand}"
+                                    Content="{DynamicResource AutoRules.Action.New}" />
+                        </Grid>
+                    </StackPanel>
+
+                    <Grid>
+                        <ListView x:Name="AutoRulesList" ItemsSource="{Binding Rules}"
+                                  SelectedItem="{Binding SelectedRule, Mode=TwoWay}"
+                                  BorderThickness="0"
+                                  Background="Transparent"
+                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="Padding" Value="0" />
+                                    <Setter Property="Margin" Value="0,0,0,8" />
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#F7F9FC" BorderBrush="{StaticResource BorderBrush}"
+                                            BorderThickness="1" CornerRadius="12" Padding="12">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="54" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <Border Width="48" Height="48" CornerRadius="11" Background="White"
+                                                    BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                                                <Image Margin="5" Source="{Binding Preview}" Stretch="Uniform" />
+                                            </Border>
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="8,0">
+                                                <TextBlock FontWeight="SemiBold" Text="{Binding Keyword}" TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Margin="0,4,0,0" FontSize="11" Foreground="{StaticResource MutedTextBrush}"
+                                                           Text="{Binding IconName}" TextTrimming="CharacterEllipsis" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                                <TextBlock FontSize="11" Foreground="{StaticResource MutedTextBrush}"
+                                                           Text="{DynamicResource AutoRules.List.Priority}" HorizontalAlignment="Right" />
+                                                <TextBlock FontSize="14" FontWeight="SemiBold" Text="{Binding Order, StringFormat={}{0:00}}"
+                                                           HorizontalAlignment="Right" />
+                                                <CheckBox Margin="0,4,0,0" IsChecked="{Binding Enabled, Mode=OneWay}"
+                                                          IsEnabled="False" ToolTip="{DynamicResource AutoRules.List.Enabled}"
+                                                          HorizontalAlignment="Right" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                        <Border x:Name="AutoRulesEmptyState" Margin="12" Padding="24" Background="#F7F9FC" CornerRadius="14"
+                                Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVisibility}}">
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="300">
+                                <TextBlock FontSize="17" FontWeight="SemiBold" TextAlignment="Center"
+                                           Text="{DynamicResource AutoRules.List.EmptyTitle}" />
+                                <TextBlock Margin="0,8,0,0" Foreground="{StaticResource MutedTextBrush}"
+                                           TextAlignment="Center" TextWrapping="Wrap"
+                                           Text="{DynamicResource AutoRules.List.EmptyBody}" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Column="2" Style="{StaticResource CardStyle}" Padding="20">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{DynamicResource AutoRules.Form.Title}" />
+                        <Label Style="{StaticResource FieldLabelStyle}" Content="{DynamicResource AutoRules.Form.Keyword}" />
+                        <TextBox x:Name="AutoRulesKeyword" Text="{Binding Keyword, UpdateSourceTrigger=PropertyChanged}" />
+
+                        <TextBlock Margin="0,16,0,6" FontWeight="SemiBold" Text="{DynamicResource AutoRules.Form.Preview}" />
+                        <Grid MinHeight="132">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="132" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Border Width="116" Height="116" CornerRadius="18" Background="#F7F9FC"
+                                    BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                                <Image x:Name="AutoRulesIconPreview" Margin="12" Source="{Binding IconPreview}" Stretch="Uniform" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <CheckBox Content="{DynamicResource AutoRules.Form.CurrentTheme}"
+                                          IsChecked="{Binding UseEditorTheme, Mode=TwoWay}" />
+                                <Button Margin="0,8,0,0" HorizontalAlignment="Left"
+                                        Command="{Binding ChooseImageCommand}"
+                                        Content="{DynamicResource AutoRules.Form.ChooseImage}" />
+                                <TextBlock MaxWidth="250" Foreground="{StaticResource MutedTextBrush}"
+                                           Text="{Binding SelectedImagePath}" TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                        </Grid>
+
+                        <CheckBox Margin="0,16,0,0" Content="{DynamicResource AutoRules.Form.Enabled}"
+                                  IsChecked="{Binding Enabled, Mode=TwoWay}" />
+
+                        <WrapPanel Margin="0,20,0,0">
+                            <Button x:Name="AutoRulesSaveButton" Command="{Binding SaveRuleCommand}" Style="{StaticResource PrimaryButtonStyle}"
+                                    Content="{DynamicResource AutoRules.Action.Save}" />
+                            <Button x:Name="AutoRulesCancelButton" Command="{Binding CancelEditCommand}"
+                                    Content="{DynamicResource AutoRules.Action.Cancel}" />
+                            <Button Command="{Binding DeleteRuleCommand}" CommandParameter="{Binding SelectedRule.Id}"
+                                    Content="{DynamicResource AutoRules.Action.Delete}" />
+                        </WrapPanel>
+                        <WrapPanel>
+                            <Button Command="{Binding MoveUpCommand}" CommandParameter="{Binding SelectedRule.Id}"
+                                    Content="{DynamicResource AutoRules.Action.MoveUp}" />
+                            <Button Command="{Binding MoveDownCommand}" CommandParameter="{Binding SelectedRule.Id}"
+                                    Content="{DynamicResource AutoRules.Action.MoveDown}" />
+                        </WrapPanel>
+                        <TextBlock Margin="0,8,0,0" Foreground="{StaticResource MutedTextBrush}"
+                                   TextWrapping="Wrap" Text="{Binding StatusText}" />
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+        <Border Grid.Row="2" Margin="0,16,0,0" Padding="16" CornerRadius="12"
+                Background="#EAF1FB" BorderBrush="#D7E4F5" BorderThickness="1">
+            <DockPanel>
+                <Button DockPanel.Dock="Right" Margin="12,0,0,0" Content="{DynamicResource AutoRules.Action.Close}"
+                        IsCancel="True" Click="Close_Click" />
+                <TextBlock x:Name="AutoRulesHelp" VerticalAlignment="Center" Foreground="{StaticResource MutedTextBrush}"
+                           TextWrapping="Wrap" Text="{DynamicResource AutoRules.Help}" />
+            </DockPanel>
+        </Border>
+    </Grid>
+</controls:RoundedWindow>
