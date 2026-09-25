@@ -9,28 +9,28 @@ namespace FolderThemeStudio.Core.Tests.Application;
 public sealed class ReleaseConfigurationTests
 {
     [Fact]
-    public void AppAssembly_IdentifiesBeta7Release()
+    public void AppAssembly_IdentifiesBeta8Release()
     {
         var version = FileVersionInfo.GetVersionInfo(typeof(FolderThemeStudio.App.App).Assembly.Location);
 
-        Assert.StartsWith("0.1.0-beta.7", version.ProductVersion);
-        Assert.Equal("0.1.0.7", version.FileVersion);
+        Assert.StartsWith("0.1.0-beta.8", version.ProductVersion);
+        Assert.Equal("0.1.0.8", version.FileVersion);
     }
 
     [Fact]
-    public void PackageScript_DefaultsToBeta7AndExcludesLocalArtifacts()
+    public void PackageScript_DefaultsToBeta8AndExcludesLocalArtifacts()
     {
         var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."));
         var script = File.ReadAllText(Path.Combine(root, "build", "Package-Release.ps1"));
         var sourceArchiveScript = File.ReadAllText(Path.Combine(root, "build", "New-SourceArchive.ps1"));
 
-        Assert.Contains("v0.1.0-beta.7", script);
+        Assert.Contains("v0.1.0-beta.8", script);
         Assert.Contains("desktop.ini", sourceArchiveScript, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("node_modules", sourceArchiveScript, StringComparison.OrdinalIgnoreCase);
         Assert.Contains(".hyperframes", sourceArchiveScript, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("renders", sourceArchiveScript, StringComparison.OrdinalIgnoreCase);
         var installer = File.ReadAllText(Path.Combine(root, "build", "FolderThemeStudio.iss"));
-        Assert.Contains("0.1.0.7", installer);
+        Assert.Contains("0.1.0.8", installer);
         Assert.Contains("RegDeleteValue", installer);
         Assert.Contains("FolderThemeStudio", installer);
     }

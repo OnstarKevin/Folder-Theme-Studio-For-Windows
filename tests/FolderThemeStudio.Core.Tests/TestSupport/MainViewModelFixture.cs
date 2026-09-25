@@ -113,6 +113,7 @@ internal sealed class RecordingMainViewModelDialogs : IMainViewModelDialogs
     internal string? ThemeImportPath { get; set; }
     internal string? ThemeExportPath { get; set; }
     internal string? ImageImportPath { get; set; }
+    internal string? FolderPathToPick { get; set; }
 
     public Task<bool> ConfirmAsync(string title, string message)
     {
@@ -120,7 +121,7 @@ internal sealed class RecordingMainViewModelDialogs : IMainViewModelDialogs
         return Task.FromResult(ConfirmResult);
     }
 
-    public Task<string?> PickFolderAsync() => Task.FromResult<string?>(null);
+    public Task<string?> PickFolderAsync() => Task.FromResult(FolderPathToPick);
 
     public Task<string?> PickThemeImportPathAsync() => Task.FromResult(ThemeImportPath);
 
@@ -273,6 +274,15 @@ internal sealed class RecordingFolderMonitoringCoordinator : IFolderMonitoringCo
     {
         Rules.RemoveAll(item => string.Equals(item.RootPath, rule.RootPath, StringComparison.OrdinalIgnoreCase));
         Rules.Add(rule);
+        return Task.CompletedTask;
+    }
+    public Task ReplaceFallbackIconAsync(string rootPath, string icoPath, CancellationToken token = default)
+    {
+        var current = Rules.FirstOrDefault(item => string.Equals(item.RootPath, rootPath, StringComparison.OrdinalIgnoreCase));
+        if (current is not null) Rules.Remove(current);
+        Rules.Add(current is null
+            ? new MonitoringRule(1, rootPath, icoPath, DateTimeOffset.UtcNow)
+            : current with { IcoPath = icoPath, UpdatedAtUtc = DateTimeOffset.UtcNow });
         return Task.CompletedTask;
     }
     public Task RemoveRuleAsync(string rootPath, CancellationToken token = default) { Removed.Add(rootPath); return Task.CompletedTask; }

@@ -1,4 +1,5 @@
 using FolderThemeStudio.App.ViewModels;
+using FolderThemeStudio.App.Monitoring;
 using FolderThemeStudio.Core.Application;
 using FolderThemeStudio.Core.SystemIntegration;
 using FolderThemeStudio.Core.Rendering;
@@ -30,6 +31,31 @@ public sealed class MainViewModelTests
         var rule = Assert.Single(fixture.Monitoring.Rules);
         Assert.Equal(@"C:\Root", rule.RootPath);
         Assert.Equal(fixture.MonitoringAssets.DurablePath, rule.IcoPath);
+    }
+
+    [Fact]
+    public async Task CompatibleApplyWithPersistence_PreservesExistingNameRules()
+    {
+        var fixture = new MainViewModelFixture();
+        fixture.Coordinator.ApplyResult = new ApplyResult(true, Guid.NewGuid(), [new(@"C:\Root", "Applied")], [], [], false, false)
+        {
+            IconArtifactPath = @"C:\Generated\new-fallback.ico"
+        };
+        fixture.Monitoring.Rules.Add(new MonitoringRule(1, @"C:\Root", @"C:\Old\fallback.ico", DateTimeOffset.UtcNow)
+        {
+            NameRules = [new("project", "Project", @"C:\Old\project.ico", true, 0)]
+        });
+        using var vm = fixture.CreateViewModel();
+        vm.SelectedMode = ApplicationMode.Compatible;
+        vm.SelectedRoots.Add(@"C:\Root");
+        vm.ContinueApplyingToNewFolders = true;
+
+        await vm.PlanAsync();
+        await vm.ApplyAsync();
+
+        var updated = Assert.Single(fixture.Monitoring.Rules);
+        Assert.Equal(fixture.MonitoringAssets.DurablePath, updated.IcoPath);
+        Assert.Equal("project", Assert.Single(updated.NameRules).Id);
     }
 
     [Fact]

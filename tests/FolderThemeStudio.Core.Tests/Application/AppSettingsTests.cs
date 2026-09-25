@@ -22,6 +22,8 @@ public sealed class AppSettingsTests
         Assert.True(settings.StartWithWindows);
         Assert.True(settings.CloseToTray);
         Assert.False(settings.MonitoringPaused);
+        Assert.Equal(1, settings.CardOpacity);
+        Assert.Equal(FolderThemeStudio.App.Services.FolderEditChord.Default, settings.EditChord);
     }
 
     [Fact]
@@ -78,5 +80,32 @@ public sealed class AppSettingsTests
         Assert.True(settings.StartWithWindows);
         Assert.True(settings.CloseToTray);
         Assert.False(settings.MonitoringPaused);
+        Assert.Equal(1, settings.CardOpacity);
+    }
+
+    [Fact]
+    public async Task CardOpacity_RoundTripsAndRejectsOutOfRange()
+    {
+        using var directory = new TemporaryDirectory();
+        var store = new JsonAppSettingsStore(Path.Combine(directory.Path, "settings.json"));
+        await store.SaveAsync(AppSettings.Default with { CardOpacity = 0.35 });
+        Assert.Equal(0.35, (await store.LoadAsync()).CardOpacity);
+        await Assert.ThrowsAsync<ArgumentException>(() => store.SaveAsync(AppSettings.Default with { CardOpacity = double.NaN }));
+    }
+
+    [Fact]
+    public async Task EditChord_RoundTripsAndRejectsBareClick()
+    {
+        using var directory = new TemporaryDirectory();
+        var store = new JsonAppSettingsStore(Path.Combine(directory.Path, "settings.json"));
+        var chord = new FolderThemeStudio.App.Services.FolderEditChord(System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Shift,
+            FolderThemeStudio.App.Services.FolderMouseButton.Middle);
+        await store.SaveAsync(AppSettings.Default with { EditChord = chord });
+        Assert.Equal(chord, (await store.LoadAsync()).EditChord);
+        await Assert.ThrowsAsync<ArgumentException>(() => store.SaveAsync(AppSettings.Default with
+        {
+            EditChord = new FolderThemeStudio.App.Services.FolderEditChord(System.Windows.Input.ModifierKeys.None,
+                FolderThemeStudio.App.Services.FolderMouseButton.Right),
+        }));
     }
 }

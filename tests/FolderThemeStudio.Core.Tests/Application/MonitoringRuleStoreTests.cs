@@ -24,8 +24,60 @@ public sealed class MonitoringRuleStoreTests
 
         Assert.True(loaded.Paused);
         Assert.Empty(loaded.Diagnostics);
-        Assert.Equal(@"C:\icons\two.ico", Assert.Single(loaded.Rules).IcoPath);
+        var loadedRule = Assert.Single(loaded.Rules);
+        Assert.Equal(@"C:\icons\two.ico", loadedRule.IcoPath);
+        Assert.Empty(loadedRule.NameRules);
         Assert.DoesNotContain(".tmp", Directory.EnumerateFiles(temp.Path).Select(Path.GetFileName));
+    }
+
+    [Fact]
+    public async Task Upsert_RoundTripsOrderedNameRulesAndWritesSchemaTwo()
+    {
+        using var temp = new TemporaryDirectory();
+        var path = Path.Combine(temp.Path, "rules.json");
+        var root = Path.Combine(temp.Path, "Root");
+        Directory.CreateDirectory(root);
+        var store = new JsonMonitoringRuleStore(path);
+        var rule = new MonitoringRule(1, root, @"C:\icons\fallback.ico", DateTimeOffset.UtcNow)
+        {
+            NameRules =
+            [
+                new("projects", "Project", @"C:\icons\project.ico", true, 1),
+                new("archive", "Archive", @"C:\icons\archive.ico", true, 0)
+            ]
+        };
+
+        await store.UpsertAsync(rule);
+        var loaded = await store.LoadAsync();
+        using var document = JsonDocument.Parse(await File.ReadAllTextAsync(path));
+
+        Assert.Equal(2, document.RootElement.GetProperty("schemaVersion").GetInt32());
+        Assert.Equal(["Archive", "Project"], Assert.Single(loaded.Rules).NameRules.Select(item => item.Keyword));
+        Assert.Equal(@"C:\icons\fallback.ico", Assert.Single(loaded.Rules).IcoPath);
+    }
+
+    [Theory]
+    [InlineData("", @"C:\icons\valid.ico")]
+    [InlineData("Project", " ")]
+    public async Task Upsert_RejectsInvalidNameRuleAndPreservesExistingRule(string keyword, string icoPath)
+    {
+        using var temp = new TemporaryDirectory();
+        var path = Path.Combine(temp.Path, "rules.json");
+        var root = Path.Combine(temp.Path, "Root");
+        Directory.CreateDirectory(root);
+        var store = new JsonMonitoringRuleStore(path);
+        var existing = new MonitoringRule(1, root, @"C:\icons\fallback.ico", DateTimeOffset.UtcNow);
+        await store.UpsertAsync(existing);
+
+        var invalid = existing with
+        {
+            NameRules = [new("invalid", keyword, icoPath, true, 0)]
+        };
+        await Assert.ThrowsAsync<InvalidDataException>(() => store.UpsertAsync(invalid));
+
+        var loaded = Assert.Single((await store.LoadAsync()).Rules);
+        Assert.Empty(loaded.NameRules);
+        Assert.Equal(existing.IcoPath, loaded.IcoPath);
     }
 
     [Fact]
