@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [ValidatePattern('^v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$')]
-    [string]$Version = 'v0.1.0-beta.7',
+    [string]$Version = 'v0.1.0-beta.8',
     [string]$DotNetPath = 'dotnet',
     [Parameter(Mandatory)]
     [string]$InnoCompilerPath,

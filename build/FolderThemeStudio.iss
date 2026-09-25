@@ -1,5 +1,5 @@
 #ifndef AppVersion
-  #define AppVersion "0.1.0-beta.7"
+  #define AppVersion "0.1.0-beta.8"
 #endif
 #ifndef SourceDir
   #define SourceDir "..\artifacts\publish"
@@ -38,8 +38,8 @@ ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 PrivilegesRequired=admin
 UninstallDisplayIcon={app}\{#AppExeName}
-VersionInfoVersion=0.1.0.7
-VersionInfoProductVersion=0.1.0.7
+VersionInfoVersion=0.1.0.8
+VersionInfoProductVersion=0.1.0.8
 VersionInfoDescription=Folder Theme Studio online installer
 
 [Languages]
