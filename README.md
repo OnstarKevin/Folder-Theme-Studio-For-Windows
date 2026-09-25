@@ -79,6 +79,10 @@ Folder Theme Studio 是一款面向 Windows 10/11 x64 的开源文件夹图标�
 - 托盘菜单可打开主窗口、暂停/恢复监控或彻底退出。
 - 开机自启和关闭到托盘均可在“设置”中关闭。
 
+### 推荐图标资源
+
+想导入现成的文件夹图标，可以访问第三方项目 [Folder11 Ico](https://github.com/icon11-community/Folder-Ico) 下载 `.ico` 文件，再使用本软件的图片图标导入功能。图标由该项目提供，使用前请查看其说明和授权条款。
+
 ### 文档
 
 - [中文使用教程](docs/USER-GUIDE.zh-CN.md)
@@ -169,6 +173,10 @@ See the [v0.1.0-beta.8 release notes](docs/releases/v0.1.0-beta.8.md) for the co
 - Windows icon caching can delay visible changes; reopen the folder window or check again later.
 - The tray menu can open the main window, pause/resume monitoring, or exit completely.
 - Startup after sign-in and close-to-tray behavior can both be disabled in Settings.
+
+### Recommended icon resource
+
+For ready-made folder icons, download `.ico` files from the third-party [Folder11 Ico](https://github.com/icon11-community/Folder-Ico) project and import them with this app's image icon import feature. Check the project's documentation and licensing terms before use.
 
 ### Documentation
 
