@@ -1,0 +1,19 @@
+# 构建产物
+bin/
+obj/
+artifacts/
+TestResults/
+*.user
+*.suo
+.vs/
+
+# 打包工具与本地环境
+node_modules/
+renders/
+
+# Windows 文件夹元数据（构建脚本也会排除）
+desktop.ini
+Thumbs.db
+
+# 其他
+.DS_Store
